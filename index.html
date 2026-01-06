@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE REST OF ZANITY // NEURAL INTERFACE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@300;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-pink: #FF69B4;
+            --primary-white: #FFFFFF;
+            --bg-dark: #0A0A0A;
+            --panel-dark: #111111;
+            --glow-pink: 0 0 20px rgba(255, 105, 180, 0.8);
+            --glow-intense: 0 0 40px rgba(255, 105, 180, 1);
+            --text-glow: 0 0 10px rgba(255, 105, 180, 0.6);
+            --terminal-green: #00ff00;
+        }
+
+        /* Boot Screen Styles */
+        #boot-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+
+        #boot-terminal {
+            width: 80%;
+            max-width: 800px;
+            height: 600px;
+            background: #000;
+            border: 2px solid var(--primary-pink);
+            box-shadow: 0 0 30px var(--primary-pink);
+            padding: 30px;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        .boot-line {
+            color: var(--terminal-green);
+            font-size: 18px;
+            line-height: 1.4;
+            margin: 8px 0;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: typeIn 0.3s forwards;
+            text-shadow: 0 0 5px var(--terminal-green);
+        }
+
+        .boot-line.system {
+            color: var(--primary-white);
+            font-weight: bold;
+        }
+
+        .boot-line.warning {
+            color: #ff9900;
+        }
+
+        .boot-line.error {
+            color: #ff0000;
+            animation: glitchText 0.1s 3;
+        }
+
+        .boot-line.success {
+            color: var(--terminal-green);
+            animation: successPulse 1s;
+        }
+
+        .boot-line.neural {
+            color: var(--primary-pink);
+            text-shadow: var(--glow-pink);
+            font-size: 24px;
+            margin-top: 20px;
+        }
+
+        .boot-progress {
+            width: 100%;
+            height: 4px;
+            background: #333;
+            margin: 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .boot-progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #00ff00, var(--primary-pink));
+            animation: progressFill 4s ease-in-out forwards;
+        }
+
+        .boot-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary-pink);
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 40px;
+            text-shadow: var(--glow-intense);
+            animation: headerGlitch 5s infinite;
+        }
+
+        .boot-command {
+            color: #00ffff;
+        }
+
+        .boot-input {
+            color: var(--terminal-green);
+            animation: blink 1s infinite;
+        }
+
+        @keyframes typeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes progressFill {
+            0% { width: 0%; }
+            25% { width: 25%; }
+            50% { width: 50%; }
+            75% { width: 75%; }
+            100% { width: 100%; }
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        @keyframes glitchText {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+
+        @keyframes successPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @keyframes headerGlitch {
+            0%, 100% { transform: translateX(0); }
+            95% { transform: translateX(0); }
+            96% { transform: translateX(-5px); }
+            97% { transform: translateX(5px); }
+            98% { transform: translateX(-5px); }
+            99% { transform: translateX(5px); }
+        }
+
+        .boot-complete {
+            position: absolute;
+            bottom: 30px;
+            width: calc(100% - 60px);
+            text-align: center;
+            font-size: 20px;
+            color: var(--terminal-green);
+            opacity: 0;
+            animation: fadeIn 2s 8s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+
+        /* Hide main content during boot */
+        body.boot-active {
+            overflow: hidden;
+        }
+
+        body.boot-active .ui-frame {
+            display: none;
+        }
+
+        /* Existing styles remain the same... */
+        body {
+            background-color: var(--bg-dark);
+            color: var(--primary-white);
+            font-family: 'Rajdhani', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.15) 0%, transparent 40%);
+            position: relative;
+        }
+
+        /* Animated Background */
+        .cyber-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 105, 180, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 105, 180, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 40s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .scan-line {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(255, 105, 180, 0.1), transparent);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .ui-frame {
+            position: relative;
+            z-index: 2;
+            border: 3px double var(--primary-pink);
+            min-height: 100vh;
+            box-shadow: var(--glow-intense);
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            display: flex;
+            justify-content: center;
+            background: rgba(17, 17, 17, 0.8);
+            backdrop-filter: blur(10px);
+            padding: 15px;
+            border-bottom: 2px solid var(--primary-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        .nav-item {
+            font-family: 'Orbitron', sans-serif;
+            margin: 0 20px;
+            cursor: pointer;
+            padding: 10px 20px;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 1.1em;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            border-color: var(--primary-pink);
+            box-shadow: var(--glow-pink);
+            background: rgba(255, 105, 180, 0.1);
+        }
+
+        /* Header */
+        .ui-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(17, 17, 17, 0.7);
+            backdrop-filter: blur(8px);
+            border-bottom: 2px solid var(--primary-pink);
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8em;
+            font-weight: 900;
+            text-shadow: var(--glow-intense);
+            letter-spacing: 4px;
+        }
+
+        .system-status {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            text-shadow: var(--text-glow);
+        }
+
+        .status-value {
+            color: var(--primary-pink);
+        }
+
+        .header-stats .stat-box {
+            display: flex;
+            align-items: center;
+            margin-left: 30px;
+            text-shadow: var(--text-glow);
+        }
+
+        /* Dashboard Wrapper */
+        .dashboard-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 3fr 1fr;
+            gap: 20px;
+            padding: 40px;
+        }
+
+        .panel {
+            background: rgba(17, 17, 17, 0.6);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--primary-pink);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: var(--glow-pink);
+        }
+
+        .panel-header {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4em;
+            margin-bottom: 15px;
+            text-shadow: var(--text-glow);
+            border-bottom: 1px solid var(--primary-pink);
+            padding-bottom: 10px;
+        }
+
+        .mt { margin-top: 30px; }
+
+        .ui-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: transparent;
+            border: 2px solid var(--primary-pink);
+            color: var(--primary-white);
+            text-align: center;
+            border-radius: 10px;
+            transition: all 0.4s;
+            text-shadow: var(--text-glow);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .ui-button:hover {
+            background: var(--primary-pink);
+            color: #000;
+            box-shadow: var(--glow-intense);
+        }
+
+        /* Center Panel */
+        .profile-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .profile-hex {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto 20px;
+            background: var(--primary-pink);
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--glow-intense);
+        }
+
+        .profile-hex img {
+            width: 90%;
+            height: 90%;
+            object-fit: cover;
+            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        }
+
+        .glitch-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4em;
+            font-weight: 900;
+            background: linear-gradient(90deg, #FFFFFF, var(--primary-pink), #FFFFFF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--glow-intense);
+            animation: titleGlitch 6s infinite;
+            letter-spacing: 8px;
+        }
+
+        @keyframes titleGlitch {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }
+            40% { transform: translate(3px, -3px); }
+            60% { transform: translate(-3px, -3px); }
+        }
+
+        .status-indicator {
+            margin-top: 20px;
+            font-size: 1.3em;
+            text-shadow: var(--text-glow);
+        }
+
+        .pulse-dot {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            background: var(--primary-pink);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+            margin-right: 10px;
+            box-shadow: var(--glow-pink);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.7; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        /* Feature Grid */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 40px 0;
+        }
+
+        .feature-card {
+            background: rgba(26, 26, 26, 0.6);
+            border: 2px solid var(--primary-pink);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.5s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--glow-intense);
+        }
+
+        .feature-icon {
+            font-size: 3em;
+            color: var(--primary-pink);
+            margin-bottom: 15px;
+            text-shadow: var(--glow-intense);
+        }
+
+        /* Lists */
+        #creator-links, #event-list, #p1-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        #creator-links li, #event-list li, #p1-list li {
+            background: rgba(26, 26, 26, 0.5);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 105, 180, 0.4);
+            transition: all 0.5s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #creator-links li:hover, #event-list li:hover, #p1-list li:hover {
+            transform: scale(1.03);
+            box-shadow: var(--glow-intense);
+        }
+
+        /* CTA Banner & Footer */
+        .cta-banner {
+            background: linear-gradient(90deg, rgba(255, 105, 180, 0.2), rgba(255, 105, 180, 0.1));
+            padding: 40px;
+            text-align: center;
+            border-top: 3px double var(--primary-pink);
+        }
+
+        .cta-buttons {
+            margin-top: 20px;
+        }
+
+        .ui-footer {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px 40px;
+            background: rgba(17, 17, 17, 0.8);
+            border-top: 2px solid var(--primary-pink);
+            text-shadow: var(--text-glow);
+        }
+
+        /* Admin Button */
+        #admin-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            font-family: 'Orbitron', sans-serif;
+            background: transparent;
+            color: var(--primary-pink);
+            border: 3px solid var(--primary-pink);
+            padding: 15px 30px;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: var(--glow-intense);
+            transition: all 0.5s;
+        }
+
+        #admin-button:hover {
+            background: var(--primary-pink);
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        /* Admin Panel */
+        #admin-panel {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90%;
+            max-width: 1000px;
+            background: rgba(17, 17, 17, 0.95);
+            backdrop-filter: blur(15px);
+            border: 4px double var(--primary-pink);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--glow-intense);
+            z-index: 1000;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        #admin-panel input {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            background: rgba(26, 26, 26, 0.7);
+            border: 2px solid var(--primary-pink);
+            border-radius: 10px;
+            color: white;
+        }
+
+        /* YouTube Hub Page Styles */
+        #youtube-hub {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-dark);
+            z-index: 1000;
+            padding: 40px;
+            overflow-y: auto;
+        }
+
+        #youtube-hub .panel-header {
+            text-align: center;
+            font-size: 2.5em;
+        }
+
+        #youtube-hub ul {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        #youtube-hub li {
+            font-size: 1.5em;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #youtube-hub a {
+            color: var(--primary-pink);
+            text-decoration: none;
+            transition: all 0.4s;
+        }
+
+        #youtube-hub a:hover {
+            text-shadow: var(--glow-intense);
+        }
+
+        #close-hub {
+            position: absolute;
+            top: 20px;
+            right: 40px;
+            font-size: 2em;
+            cursor: pointer;
+            color: var(--primary-pink);
+            transition: all 0.4s;
+        }
+
+        #close-hub:hover {
+            transform: scale(1.2);
+            text-shadow: var(--glow-intense);
+        }
+    </style>
+</head>
+<body class="boot-active">
+    <!-- Boot Screen -->
+    <div id="boot-screen">
+        <div id="boot-terminal">
+            <div class="boot-header">THE REST OF ZANITY // NEURAL INTERFACE</div>
+            
+            <div id="boot-lines"></div>
+            
+            <div class="boot-progress">
+                <div class="boot-progress-bar"></div>
+            </div>
+            
+            <div class="boot-complete">
+                SYSTEM BOOT COMPLETE // PRESS ANY KEY TO CONTINUE
+            </div>
+        </div>
+    </div>
+
+    <div class="cyber-grid"></div>
+    <div class="scan-line"></div>
+
+    <div class="ui-frame">
+        <nav class="top-nav">
+            <div class="nav-item active">HOME</div>
+            <div class="nav-item">CREATORS</div>
+            <div class="nav-item">EVENTS</div>
+            <div class="nav-item">COMMUNITY</div>
+            <div class="nav-item">ABOUT</div>
+        </nav>
+
+        <header class="ui-header">
+            <div class="logo">
+                <i class="fas fa-microchip"></i> THE REST OF ZANITY // V2.6
+            </div>
+            <div class="header-center">
+                <div class="system-status">
+                    <span class="status-label">SYSTEM STATUS:</span>
+                    <span class="status-value">OPERATIONAL</span>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-box">
+                    <i class="fas fa-users"></i>
+                    <div><span class="stat-label">MEMBERS</span><span class="stat-value">10K+</span></div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-eye"></i>
+                    <div><span class="stat-label">ACTIVE</span><span class="stat-value">1.2K</span></div>
+                </div>
+                <div class="stat-box">
+                    <i class="fas fa-signal"></i>
+                    <div><span class="stat-label">PING</span><span class="stat-value">18ms</span></div>
+                </div>
+            </div>
+        </header>
+
+        <div class="dashboard-wrapper">
+            <aside class="panel side-panel left-panel">
+                <div class="panel-header"><i class="fas fa-bolt"></i> QUICK ACCESS</div>
+                <div class="panel-body">
+                    <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="ui-button"><i class="fab fa-discord"></i> Discord Server</a>
+                    <a href="#" id="open-youtube-hub" class="ui-button"><i class="fab fa-youtube"></i> YouTube Hub</a>
+                    <a href="#" class="ui-button"><i class="fab fa-twitch"></i> Twitch Streams</a>
+                    <a href="#" class="ui-button"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" class="ui-button"><i class="fab fa-twitter"></i> X / Twitter</a>
+                </div>
+
+                <div class="panel-header mt"><i class="fas fa-calendar-alt"></i> UPCOMING EVENTS</div>
+                <div class="panel-body">
+                    <ul id="event-list"></ul>
+                </div>
+            </aside>
+
+            <main class="panel center-panel">
+                <div class="profile-section">
+                    <div class="profile-hex">
+                        <img src="https://via.placeholder.com/200/FF69B4/000000?text=TRoZ" alt="The Rest of Zanity">
+                    </div>
+                    <h1 class="glitch-text">THE REST OF ZANITY</h1>
+                    <p class="profile-tagline">COMMUNITY SERVER // CONTENT CREATORS // CREATIVE CHAOS</p>
+                    <div class="status-indicator">
+                        <span class="pulse-dot"></span> NEURAL INTERFACE ACTIVE
+                    </div>
+                </div>
+
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-users"></i></div>
+                        <h3>JOIN COMMUNITY</h3>
+                        <p>Connect with creators & members</p>
+                        <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="feature-btn ui-button">ENTER DISCORD</a>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-video"></i></div>
+                        <h3>LIVE STREAMS</h3>
+                        <p>Watch featured creators</p>
+                        <button class="feature-btn ui-button">GO LIVE</button>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
+                        <h3>EVENTS & TOURNAMENTS</h3>
+                        <p>Compete and collaborate</p>
+                        <button class="feature-btn ui-button">VIEW SCHEDULE</button>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i class="fas fa-star"></i></div>
+                        <h3>SUPPORTIVE P1s</h3>
+                        <p>Honoring our top supporters</p>
+                        <button class="feature-btn ui-button">VIEW LIST</button>
+                    </div>
+                </div>
+
+                <div class="panel-header" style="text-align:center; margin:40px 0 20px;"><i class="fas fa-user-astronaut"></i> FEATURED CONTENT CREATORS</div>
+                <ul id="creator-links" style="padding:0;"></ul>
+            </main>
+
+            <aside class="panel side-panel right-panel">
+                <div class="panel-header"><i class="fas fa-star"></i> SUPPORTIVE P1 MEMBERS</div>
+                <div class="panel-body">
+                    <ul id="p1-list"></ul>
+                </div>
+
+                <div class="panel-header mt"><i class="fas fa-rss"></i> COMMUNITY FEED</div>
+                <div class="panel-body scrollable">
+                    <div class="feed-item"><p>New creator spotlight coming soon!</p><span class="feed-time">1h ago</span></div>
+                    <div class="feed-item"><p>Game night event scheduled for Friday!</p><span class="feed-time">3h ago</span></div>
+                    <div class="feed-item"><p>Welcome 500 new members this week!</p><span class="feed-time">1d ago</span></div>
+                </div>
+            </aside>
+        </div>
+
+        <div class="cta-banner">
+            <div class="cta-content">
+                <h2>ENTER THE GRID</h2>
+                <p>Join the vibrant community of creators and supporters in The Rest of Zanity</p>
+            </div>
+            <div class="cta-buttons">
+                <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="ui-button"><i class="fab fa-discord"></i> JOIN DISCORD</a>
+            </div>
+        </div>
+
+        <footer class="ui-footer">
+            <div><i class="fas fa-shield-alt"></i> SYSTEM STATUS: SECURE</div>
+            <div>© 2026 THE REST OF ZANITY. ALL RIGHTS RESERVED.</div>
+            <div>NEURAL INTERFACE v2.6 // PROTOCOL ACTIVE</div>
+        </footer>
+    </div>
+
+    <!-- YouTube Hub Overlay Page -->
+    <div id="youtube-hub">
+        <div id="close-hub"><i class="fas fa-times"></i></div>
+        <div class="panel-header">YOUTUBE HUB // CONTENT CREATORS</div>
+        <ul id="youtube-creators-list"></ul>
+        <p style="text-align:center; margin-top:40px; opacity:0.7;">Subscriber counts are static (as of January 2026). For real-time updates, a server backend would be required.</p>
+    </div>
+
+    <button id="admin-button">ADMIN TERMINAL</button>
+
+    <section id="admin-panel">
+        <div>
+            <h3>CREATOR MANAGEMENT</h3>
+            <input type="text" id="new-creator-name" placeholder="NAME">
+            <input type="text" id="new-creator-desc" placeholder="DESCRIPTION">
+            <input type="text" id="new-creator-youtube" placeholder="YOUTUBE">
+            <input type="text" id="new-creator-instagram" placeholder="INSTAGRAM">
+            <input type="text" id="new-creator-twitch" placeholder="TWITCH">
+            <input type="text" id="new-creator-other" placeholder="OTHER">
+            <button id="add-creator" class="ui-button">DEPLOY</button>
+        </div>
+        <div>
+            <h3>EVENT SCHEDULER</h3>
+            <input type="text" id="new-event-name" placeholder="TITLE">
+            <input type="date" id="new-event-date">
+            <input type="time" id="new-event-time">
+            <input type="text" id="new-event-desc" placeholder="DETAILS">
+            <button id="add-event" class="ui-button">SCHEDULE</button>
+        </div>
+        <div>
+            <h3>P1 HONOR</h3>
+            <input type="text" id="new-p1-name" placeholder="USERNAME">
+            <input type="text" id="new-p1-desc" placeholder="REASON">
+            <button id="add-p1" class="ui-button">HONOR</button>
+        </div>
+        <div style="text-align:center;">
+            <button id="logout-admin" class="ui-button">TERMINATE SESSION</button>
+        </div>
+    </section>
+
+    <script>
+        // Boot Sequence
+        const bootLines = [
+            {text: "INITIALIZING NEURAL INTERFACE...", delay: 300, class: "system"},
+            {text: "LOADING CORE SYSTEMS...", delay: 800, class: "system"},
+            {text: "> MEMORY ALLOCATION: 1024MB/4096MB", delay: 1200, class: ""},
+            {text: "> GRAPHICS PROCESSOR: ONLINE", delay: 1500, class: "success"},
+            {text: "> AUDIO SUBSYSTEM: ONLINE", delay: 1800, class: "success"},
+            {text: "> NETWORK INTERFACE: ESTABLISHED", delay: 2100, class: "success"},
+            {text: "ACCESSING DATABASE...", delay: 2500, class: "system"},
+            {text: "WARNING: ENCRYPTION KEY REQUIRED", delay: 2800, class: "warning"},
+            {text: "> DECRYPTING USER PROFILES...", delay: 3200, class: ""},
+            {text: "ERROR: PROFILE CORRUPTION DETECTED", delay: 3600, class: "error"},
+            {text: "> RUNNING REPAIR PROTOCOL...", delay: 4000, class: ""},
+            {text: "> PROFILE RESTORATION: SUCCESSFUL", delay: 4400, class: "success"},
+            {text: "LOADING CREATOR NETWORK...", delay: 4800, class: "system"},
+            {text: "> CONNECTING TO YOUTUBE API...", delay: 5200, class: ""},
+            {text: "> CONNECTING TO DISCORD...", delay: 5600, class: ""},
+            {text: "> CONNECTING TO TWITCH...", delay: 6000, class: ""},
+            {text: "ESTABLISHING NEURAL LINK...", delay: 6400, class: "neural"},
+            {text: "> SYNAPSE SYNCHRONIZATION: 97%", delay: 6800, class: ""},
+            {text: "> BIO-METRICS: STABLE", delay: 7200, class: "success"},
+            {text: "SYSTEM READY", delay: 7600, class: "neural"}
+        ];
+
+        let currentLine = 0;
+
+        function displayBootLine() {
+            if (currentLine < bootLines.length) {
+                const line = bootLines[currentLine];
+                const bootLinesContainer = document.getElementById('boot-lines');
+                
+                const lineElement = document.createElement('div');
+                lineElement.className = `boot-line ${line.class}`;
+                lineElement.textContent = line.text;
+                lineElement.style.animationDelay = `${line.delay}ms`;
+                
+                bootLinesContainer.appendChild(lineElement);
+                
+                // Scroll to bottom
+                bootLinesContainer.scrollTop = bootLinesContainer.scrollHeight;
+                
+                currentLine++;
+                setTimeout(displayBootLine, line.delay - (currentLine > 0 ? bootLines[currentLine-1].delay : 0));
+            }
+        }
+
+        function endBootSequence() {
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.opacity = '0';
+                document.getElementById('boot-screen').style.transition = 'opacity 1s ease';
+                
+                setTimeout(() => {
+                    document.getElementById('boot-screen').style.display = 'none';
+                    document.body.classList.remove('boot-active');
+                }, 1000);
+            }, 9000); // Total boot time including progress bar animation
+        }
+
+        // Start boot sequence
+        document.addEventListener('DOMContentLoaded', () => {
+            displayBootLine();
+            endBootSequence();
+            
+            // Add keyboard listener to skip boot
+            document.addEventListener('keydown', skipBoot);
+            document.getElementById('boot-screen').addEventListener('click', skipBoot);
+        });
+
+        function skipBoot() {
+            document.getElementById('boot-screen').style.opacity = '0';
+            document.getElementById('boot-screen').style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(() => {
+                document.getElementById('boot-screen').style.display = 'none';
+                document.body.classList.remove('boot-active');
+            }, 500);
+        }
+
+        // Rest of the existing JavaScript code
+        const ADMIN_PASSWORD = "zanityadmin123";
+
+        // Default creators with display names and static sub counts
+        const youtubeCreators = [
+            { displayName: "LORD MATHIAS", channel: "@1LORDMATHIAS", url: "https://www.youtube.com/@1LORDMATHIAS", subs: "Check on YouTube" },
+            { displayName: "MALLYALIEN OFFICIAL", channel: "@Mallyalien_Offical", url: "https://www.youtube.com/@Mallyalien_Offical", subs: "Check on YouTube" },
+            { displayName: "BLUEEY36", channel: "@blueey36", url: "https://www.youtube.com/@blueey36", subs: "Check on YouTube" },
+            { displayName: "Dinothugg", channel: "https://youtube.com/@dinothugg?si=VctJRKhRR4nO6fX2", url: "#", subs: "Check on YouTube" },
+            { displayName: "ART BY LUNA", channel: "Example", url: "#", subs: "Check on YouTube" },
+            { displayName: "TECHZEST", channel: "Example", url: "#", subs: "Check on YouTube" }
+        ];
+
+        function loadYouTubeHub() {
+            const ul = document.getElementById('youtube-creators-list');
+            ul.innerHTML = '';
+            youtubeCreators.forEach(creator => {
+                const li = document.createElement('li');
+                li.innerHTML = `
+                    <div>
+                        <strong>${creator.displayName}</strong> (${creator.channel})
+                    </div>
+                    <div>
+                        <a href="${creator.url}" target="_blank">SUBSCRIBE</a> — ${creator.subs} subscribers
+                    </div>
+                `;
+                ul.appendChild(li);
+            });
+        }
+
+        document.getElementById('open-youtube-hub').addEventListener('click', (e) => {
+            e.preventDefault();
+            document.getElementById('youtube-hub').style.display = 'block';
+            loadYouTubeHub();
+        });
+
+        document.getElementById('close-hub').addEventListener('click', () => {
+            document.getElementById('youtube-hub').style.display = 'none';
+        });
+
+        function loadCreators() {
+            const creators = JSON.parse(localStorage.getItem('creators')) || [
+                { name: 'LORDMATHIAS', desc: 'CONTENT CREATOR', youtube: 'https://www.youtube.com/@1LORDMATHIAS' },
+                { name: 'MALLYALIEN', desc: 'OFFICIAL CHANNEL', youtube: 'https://www.youtube.com/@Mallyalien_Offical' },
+                { name: 'BLUEEY36', desc: 'CREATOR HUB', youtube: 'https://www.youtube.com/@blueey36' }
+            ];
+            const ul = document.getElementById('creator-links');
+            ul.innerHTML = '';
+            creators.forEach(creator => {
+                const li = document.createElement('li');
+                let channels = '';
+                if (creator.youtube) channels += `<a href="${creator.youtube}" target="_blank">YOUTUBE</a> `;
+                if (creator.instagram) channels += `<a href="${creator.instagram}" target="_blank">INSTAGRAM</a> `;
+                if (creator.twitch) channels += `<a href="${creator.twitch}" target="_blank">TWITCH</a> `;
+                if (creator.other) channels += `<a href="${creator.other}" target="_blank">OTHER</a> `;
+                li.innerHTML = `<strong>${creator.name}</strong> — ${creator.desc}<br>CHANNELS: ${channels || 'CLASSIFIED'}<button class="remove-link" style="display:none;">ERASE</button>`;
+                ul.appendChild(li);
+            });
+        }
+
+        function loadEvents() {
+            const events = JSON.parse(localStorage.getItem('events')) || [
+                { name: 'COMMUNITY GAME NIGHT', date: '2026-01-10', time: '20:00', desc: 'MULTIPLAYER CHAOS' },
+                { name: 'CREATOR COLLAB', date: '2026-01-20', time: '19:00', desc: 'LIVE WITH FEATURED MEMBERS' }
+            ];
+            const ul = document.getElementById('event-list');
+            ul.innerHTML = '';
+            events.forEach(event => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${event.name}</strong><br>${event.date} @ ${event.time}${event.desc ? ' — ' + event.desc : ''}<button class="remove-link" style="display:none;">CANCEL</button>`;
+                ul.appendChild(li);
+            });
+        }
+
+        function loadP1s() {
+            const p1s = JSON.parse(localStorage.getItem('p1s')) || [
+                { name: 'NEONKNIGHT', desc: 'LEGENDARY SUPPORT & MODERATION' },
+                { name: 'GRIDRUNNER', desc: 'ALWAYS ACTIVE & HELPFUL' }
+            ];
+            const ul = document.getElementById('p1-list');
+            ul.innerHTML = '';
+            p1s.forEach(p1 => {
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>${p1.name}</strong><br>${p1.desc}<button class="remove-link" style="display:none;">REVOKE</button>`;
+                ul.appendChild(li);
+            });
+        }
+
+        document.getElementById('admin-button').addEventListener('click', () => {
+            const password = prompt('ENTER ADMIN CREDENTIALS:');
+            if (password === ADMIN_PASSWORD) {
+                document.getElementById('admin-panel').style.display = 'grid';
+                document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'inline-block');
+                document.getElementById('admin-button').style.display = 'none';
+            } else {
+                alert('ACCESS DENIED');
+            }
+        });
+
+        document.getElementById('add-creator').addEventListener('click', () => {
+            const name = document.getElementById('new-creator-name').value;
+            const desc = document.getElementById('new-creator-desc').value;
+            const youtube = document.getElementById('new-creator-youtube').value;
+            const instagram = document.getElementById('new-creator-instagram').value;
+            const twitch = document.getElementById('new-creator-twitch').value;
+            const other = document.getElementById('new-creator-other').value;
+            
+            if (name) {
+                const creators = JSON.parse(localStorage.getItem('creators')) || [];
+                creators.push({ name, desc, youtube, instagram, twitch, other });
+                localStorage.setItem('creators', JSON.stringify(creators));
+                loadCreators();
+                alert('CREATOR DEPLOYED');
+            } else {
+                alert('NAME REQUIRED');
+            }
+        });
+
+        document.getElementById('add-event').addEventListener('click', () => {
+            const name = document.getElementById('new-event-name').value;
+            const date = document.getElementById('new-event-date').value;
+            const time = document.getElementById('new-event-time').value;
+            const desc = document.getElementById('new-event-desc').value;
+            
+            if (name && date && time) {
+                const events = JSON.parse(localStorage.getItem('events')) || [];
+                events.push({ name, date, time, desc });
+                localStorage.setItem('events', JSON.stringify(events));
+                loadEvents();
+                alert('EVENT SCHEDULED');
+            } else {
+                alert('NAME, DATE, AND TIME REQUIRED');
+            }
+        });
+
+        document.getElementById('add-p1').addEventListener('click', () => {
+            const name = document.getElementById('new-p1-name').value;
+            const desc = document.getElementById('new-p1-desc').value;
+            
+            if (name) {
+                const p1s = JSON.parse(localStorage.getItem('p1s')) || [];
+                p1s.push({ name, desc });
+                localStorage.setItem('p1s', JSON.stringify(p1s));
+                loadP1s();
+                alert('P1 HONORED');
+            } else {
+                alert('NAME REQUIRED');
+            }
+        });
+
+        document.querySelector('main').addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-link')) {
+                if (confirm('CONFIRM DELETION?')) {
+                    e.target.parentElement.remove();
+                    loadCreators(); loadEvents(); loadP1s();
+                }
+            }
+        });
+
+        document.getElementById('logout-admin').addEventListener('click', () => {
+            document.getElementById('admin-panel').style.display = 'none';
+            document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'none');
+            document.getElementById('admin-button').style.display = 'block';
+        });
+
+        // Initialize after boot sequence
+        setTimeout(() => {
+            loadCreators();
+            loadEvents();
+            loadP1s();
+        }, 10000);
+    </script>
+</body>
+</html>
