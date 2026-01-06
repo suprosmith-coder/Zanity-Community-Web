@@ -1,0 +1,1228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyanix AI - Intelligent Assistant</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #F2F2F7;
+            --user-bubble: #007AFF;
+            --ai-bubble: #E9E9EB;
+            --text-dark: #1D1D1F;
+            --text-light: #8E8E93;
+            --success: #34C759;
+            --danger: #FF3B30;
+            --warning: #FF9500;
+            --card-bg: #FFFFFF;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+            --radius: 12px;
+            --radius-lg: 18px;
+            --radius-xl: 24px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--secondary-color);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Screen Manager */
+        .screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            flex-direction: column;
+            background-color: var(--secondary-color);
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            padding: 20px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .login-icon {
+            width: 100px;
+            height: 100px;
+            background-color: var(--primary-color);
+            border-radius: var(--radius-xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-icon i {
+            font-size: 50px;
+            color: white;
+        }
+
+        .login-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .login-subtitle {
+            font-size: 16px;
+            color: var(--text-light);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 16px;
+            border: 1px solid #D1D1D6;
+            border-radius: var(--radius);
+            font-size: 16px;
+            margin-bottom: 20px;
+            background-color: white;
+            transition: border-color 0.3s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--radius);
+            font-size: 17px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s;
+        }
+
+        .login-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Chat Screen */
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Top Bar */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            padding: 16px;
+            background-color: white;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--text-dark);
+            cursor: pointer;
+            padding: 8px;
+            margin-right: 12px;
+            border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-button:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .app-title {
+            font-size: 18px;
+            font-weight: 600;
+            flex-grow: 1;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+            background-color: var(--success);
+        }
+
+        .status-offline {
+            background-color: var(--danger);
+        }
+
+        /* Chat Area */
+        .chat-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        /* Message Bubbles */
+        .message-bubble {
+            display: flex;
+            max-width: 80%;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-bubble.user {
+            align-self: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-content {
+            padding: 12px 16px;
+            border-radius: var(--radius-lg);
+            font-size: 15px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .message-bubble.user .message-content {
+            background-color: var(--user-bubble);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .message-bubble.ai .message-content {
+            background-color: var(--ai-bubble);
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+
+        /* Input Area */
+        .input-area {
+            display: flex;
+            align-items: flex-end;
+            padding: 12px 16px;
+            background-color: white;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            gap: 8px;
+        }
+
+        .input-wrapper {
+            flex-grow: 1;
+            background-color: var(--ai-bubble);
+            border-radius: 20px;
+            padding: 12px 16px;
+            min-height: 44px;
+            display: flex;
+            align-items: center;
+        }
+
+        #message-input {
+            flex-grow: 1;
+            border: none;
+            background: none;
+            font-size: 16px;
+            color: var(--text-dark);
+            outline: none;
+            resize: none;
+            max-height: 100px;
+            min-height: 20px;
+            line-height: 1.4;
+            font-family: inherit;
+        }
+
+        #message-input::placeholder {
+            color: var(--text-light);
+        }
+
+        .send-button {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: opacity 0.3s;
+        }
+
+        .send-button:hover {
+            opacity: 0.9;
+        }
+
+        /* Side Menu */
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+            z-index: 100;
+            display: none;
+            animation: fadeInOverlay 0.3s ease-out;
+        }
+
+        @keyframes fadeInOverlay {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .menu-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 75%;
+            max-width: 320px;
+            height: 100%;
+            background-color: white;
+            z-index: 101;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-out;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .menu-panel.open {
+            transform: translateX(0);
+        }
+
+        .menu-header {
+            padding: 60px 20px 20px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 60px;
+            height: 60px;
+            background-color: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+        }
+
+        .user-avatar span {
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+        }
+
+        .user-name {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .user-status {
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .menu-content {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .menu-section {
+            margin-bottom: 24px;
+        }
+
+        .section-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .menu-button-item {
+            width: 100%;
+            padding: 14px 16px;
+            background-color: #F2F2F7;
+            border: none;
+            border-radius: 10px;
+            font-size: 15px;
+            color: var(--primary-color);
+            text-align: left;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .menu-button-item:hover {
+            background-color: #E5E5EA;
+        }
+
+        .menu-button-item i {
+            margin-right: 10px;
+            width: 20px;
+        }
+
+        .menu-card {
+            background-color: white;
+            border-radius: var(--radius);
+            padding: 16px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .menu-card-label {
+            font-size: 15px;
+            color: var(--text-dark);
+        }
+
+        .logout-button {
+            color: var(--danger);
+            background-color: #FFE5E5;
+        }
+
+        .logout-button:hover {
+            background-color: #FFD6D6;
+        }
+
+        /* Settings */
+        .slider-container {
+            flex-grow: 1;
+            margin-left: 16px;
+        }
+
+        .slider {
+            width: 100%;
+            height: 4px;
+            background-color: #E5E5EA;
+            border-radius: 2px;
+            outline: none;
+            -webkit-appearance: none;
+        }
+
+        .slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 51px;
+            height: 31px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider-switch {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #E5E5EA;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider-switch:before {
+            position: absolute;
+            content: "";
+            height: 27px;
+            width: 27px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider-switch {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider-switch:before {
+            transform: translateX(20px);
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease-out;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .notification-success {
+            background-color: var(--success);
+        }
+
+        .notification-info {
+            background-color: var(--primary-color);
+        }
+
+        .notification-warning {
+            background-color: var(--warning);
+        }
+
+        .notification-message {
+            font-size: 14px;
+            color: var(--text-dark);
+        }
+
+        /* Loading Indicator */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(0, 122, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-color);
+            animation: spin 1s ease-in-out infinite;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .login-container {
+                padding: 16px;
+            }
+            
+            .login-icon {
+                width: 80px;
+                height: 80px;
+            }
+            
+            .login-icon i {
+                font-size: 40px;
+            }
+            
+            .login-title {
+                font-size: 28px;
+            }
+            
+            .message-bubble {
+                max-width: 85%;
+            }
+            
+            .menu-panel {
+                width: 85%;
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen active">
+        <div class="login-container">
+            <div class="login-icon">
+                <i class="fas fa-brain"></i>
+            </div>
+            <h1 class="login-title">Cyanix AI</h1>
+            <p class="login-subtitle">Your intelligent assistant</p>
+            <input type="text" id="username-input" class="login-input" placeholder="Enter your name" autocomplete="off">
+            <button id="login-button" class="login-button">Continue</button>
+        </div>
+    </div>
+
+    <!-- Chat Screen -->
+    <div id="chat-screen" class="screen">
+        <div class="chat-container">
+            <!-- Top Bar -->
+            <div class="top-bar">
+                <button class="menu-button" id="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="app-title">Cyanix AI</div>
+                <div class="status-indicator" id="status-indicator"></div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="chat-area" id="chat-area">
+                <!-- Messages will be added here dynamically -->
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea id="message-input" placeholder="Message" rows="1"></textarea>
+                </div>
+                <button class="send-button" id="send-button">
+                    <i class="fas fa-arrow-up"></i>
+                </button>
+            </div>
+
+            <!-- Side Menu -->
+            <div class="menu-overlay" id="menu-overlay"></div>
+            <div class="menu-panel" id="menu-panel">
+                <div class="menu-header">
+                    <div class="user-avatar" id="user-avatar">
+                        <span>U</span>
+                    </div>
+                    <div class="user-name" id="menu-username">User</div>
+                    <div class="user-status">Active User</div>
+                </div>
+                <div class="menu-content">
+                    <div class="menu-section">
+                        <div class="section-title">AI MODE</div>
+                        <button class="menu-button-item" data-mode="nix">
+                            <i class="fas fa-bolt"></i> Nix - Quick Responses
+                        </button>
+                        <button class="menu-button-item" data-mode="blub">
+                            <i class="fas fa-brain"></i> Nova - Deep Thinking
+                        </button>
+                        <button class="menu-button-item" data-mode="default">
+                            <i class="fas fa-robot"></i> Cyanix - Balanced
+                        </button>
+                    </div>
+
+                    <div class="menu-section">
+                        <div class="section-title">SETTINGS</div>
+                        <div class="menu-card">
+                            <div class="menu-card-label">Voice Speed</div>
+                            <div class="slider-container">
+                                <input type="range" min="0.5" max="1.5" step="0.1" value="0.9" class="slider" id="voice-speed-slider">
+                            </div>
+                        </div>
+                        <div class="menu-card">
+                            <div class="menu-card-label">Auto-Speak</div>
+                            <label class="switch">
+                                <input type="checkbox" id="auto-speak-switch" checked>
+                                <span class="slider-switch"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="menu-section">
+                        <div class="section-title">ACTIONS</div>
+                        <button class="menu-button-item" id="clear-chat">
+                            <i class="fas fa-broom"></i> Clear Chat
+                        </button>
+                        <button class="menu-button-item" id="export-chat">
+                            <i class="fas fa-download"></i> Export Chat
+                        </button>
+                        <button class="menu-button-item" id="load-memory">
+                            <i class="fas fa-folder-open"></i> Load Memory
+                        </button>
+                        <button class="menu-button-item" id="clear-memory">
+                            <i class="fas fa-trash"></i> Clear Memory
+                        </button>
+                        <button class="menu-button-item logout-button" id="logout-button">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification -->
+    <div class="notification" id="notification">
+        <div class="notification-icon notification-info">
+            <i class="fas fa-info"></i>
+        </div>
+        <div class="notification-message" id="notification-message"></div>
+    </div>
+
+    <script>
+        class CyanixApp {
+            constructor() {
+                this.currentUsername = '';
+                this.currentMode = 'default';
+                this.autoSpeakEnabled = true;
+                this.voiceSpeed = 0.9;
+                this.chatHistory = [];
+                this.menuOpen = false;
+                this.isOnline = true;
+                this.isTyping = false;
+                
+                // Initialize
+                this.initElements();
+                this.bindEvents();
+                this.loadSettings();
+                this.checkOnlineStatus();
+                setInterval(() => this.checkOnlineStatus(), 5000);
+            }
+
+            initElements() {
+                // Screens
+                this.loginScreen = document.getElementById('login-screen');
+                this.chatScreen = document.getElementById('chat-screen');
+                
+                // Login elements
+                this.usernameInput = document.getElementById('username-input');
+                this.loginButton = document.getElementById('login-button');
+                
+                // Chat elements
+                this.chatArea = document.getElementById('chat-area');
+                this.messageInput = document.getElementById('message-input');
+                this.sendButton = document.getElementById('send-button');
+                this.statusIndicator = document.getElementById('status-indicator');
+                
+                // Menu elements
+                this.menuToggle = document.getElementById('menu-toggle');
+                this.menuOverlay = document.getElementById('menu-overlay');
+                this.menuPanel = document.getElementById('menu-panel');
+                this.userAvatar = document.getElementById('user-avatar');
+                this.menuUsername = document.getElementById('menu-username');
+                this.voiceSpeedSlider = document.getElementById('voice-speed-slider');
+                this.autoSpeakSwitch = document.getElementById('auto-speak-switch');
+                
+                // Buttons
+                this.clearChatBtn = document.getElementById('clear-chat');
+                this.exportChatBtn = document.getElementById('export-chat');
+                this.loadMemoryBtn = document.getElementById('load-memory');
+                this.clearMemoryBtn = document.getElementById('clear-memory');
+                this.logoutButton = document.getElementById('logout-button');
+                
+                // Notification
+                this.notification = document.getElementById('notification');
+                this.notificationMessage = document.getElementById('notification-message');
+                
+                // Mode buttons
+                this.modeButtons = document.querySelectorAll('[data-mode]');
+            }
+
+            bindEvents() {
+                // Login
+                this.loginButton.addEventListener('click', () => this.authenticateUser());
+                this.usernameInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.authenticateUser();
+                });
+                
+                // Chat
+                this.sendButton.addEventListener('click', () => this.sendMessage());
+                this.messageInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        this.sendMessage();
+                    }
+                });
+                
+                // Auto-resize textarea
+                this.messageInput.addEventListener('input', () => {
+                    this.messageInput.style.height = 'auto';
+                    this.messageInput.style.height = (this.messageInput.scrollHeight) + 'px';
+                });
+                
+                // Menu
+                this.menuToggle.addEventListener('click', () => this.toggleMenu());
+                this.menuOverlay.addEventListener('click', () => this.toggleMenu());
+                
+                // Settings
+                this.voiceSpeedSlider.addEventListener('input', (e) => {
+                    this.voiceSpeed = parseFloat(e.target.value);
+                    this.saveSettings();
+                });
+                
+                this.autoSpeakSwitch.addEventListener('change', (e) => {
+                    this.autoSpeakEnabled = e.target.checked;
+                    this.saveSettings();
+                });
+                
+                // Mode selection
+                this.modeButtons.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const mode = btn.getAttribute('data-mode');
+                        this.setAiMode(mode);
+                    });
+                });
+                
+                // Action buttons
+                this.clearChatBtn.addEventListener('click', () => this.clearChat());
+                this.exportChatBtn.addEventListener('click', () => this.exportChat());
+                this.loadMemoryBtn.addEventListener('click', () => this.loadMemory());
+                this.clearMemoryBtn.addEventListener('click', () => this.clearMemory());
+                this.logoutButton.addEventListener('click', () => this.logout());
+            }
+
+            authenticateUser() {
+                const username = this.usernameInput.value.trim();
+                if (!username) {
+                    this.showNotification('Please enter your name', 'warning');
+                    return;
+                }
+                
+                this.currentUsername = username;
+                
+                // Update UI
+                this.userAvatar.innerHTML = `<span>${username.charAt(0).toUpperCase()}</span>`;
+                this.menuUsername.textContent = username;
+                
+                // Switch to chat screen
+                this.loginScreen.classList.remove('active');
+                this.chatScreen.classList.add('active');
+                
+                // Clear input
+                this.usernameInput.value = '';
+                
+                // Focus on message input
+                setTimeout(() => this.messageInput.focus(), 100);
+                
+                // Greet user
+                this.greetUser();
+                
+                // Save user
+                localStorage.setItem('cyanix_username', username);
+                this.showNotification(`Welcome ${username}!`, 'success');
+            }
+
+            greetUser() {
+                const memoryKey = `cyanix_memory_${this.currentUsername}`;
+                const hasMemory = localStorage.getItem(memoryKey);
+                
+                let greeting;
+                if (hasMemory) {
+                    greeting = `Welcome back, ${this.currentUsername}!`;
+                } else {
+                    greeting = `Hello ${this.currentUsername}! I'm Cyanix, your AI assistant. How can I help you today?`;
+                    // Create initial memory
+                    localStorage.setItem(memoryKey, JSON.stringify([]));
+                }
+                
+                this.addMessage(greeting, 'ai');
+                
+                // Load conversation history
+                this.loadConversationHistory();
+            }
+
+            sendMessage() {
+                const message = this.messageInput.value.trim();
+                if (!message || this.isTyping) return;
+                
+                // Add user message
+                this.addMessage(message, 'user');
+                this.saveToMemory(message, 'user');
+                
+                // Clear input
+                this.messageInput.value = '';
+                this.messageInput.style.height = 'auto';
+                
+                // Show typing indicator
+                this.showTypingIndicator();
+                
+                // Process AI response (simulated for demo)
+                setTimeout(() => {
+                    this.removeTypingIndicator();
+                    this.generateAIResponse(message);
+                }, 1000 + Math.random() * 1000);
+            }
+
+            generateAIResponse(userMessage) {
+                const lowerMessage = userMessage.toLowerCase();
+                let response = '';
+                
+                // Simple response logic for demo
+                if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+                    response = `Hello ${this.currentUsername}! How can I assist you today?`;
+                } else if (lowerMessage.includes('how are you')) {
+                    response = "I'm doing great, thank you for asking! Ready to help you with anything you need.";
+                } else if (lowerMessage.includes('time')) {
+                    const now = new Date();
+                    response = `The current time is ${now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+                } else if (lowerMessage.includes('date')) {
+                    const now = new Date();
+                    response = `Today is ${now.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+                } else if (lowerMessage.includes('thank')) {
+                    response = "You're welcome! Is there anything else I can help you with?";
+                } else if (lowerMessage.includes('weather')) {
+                    response = "I don't have real-time weather data in this demo, but you can check your favorite weather app for accurate information!";
+                } else if (lowerMessage.includes('joke')) {
+                    const jokes = [
+                        "Why don't scientists trust atoms? Because they make up everything!",
+                        "Why did the scarecrow win an award? He was outstanding in his field!",
+                        "What do you call a fake noodle? An impasta!",
+                        "Why did the bicycle fall over? Because it was two-tired!",
+                        "What do you call a bear with no teeth? A gummy bear!"
+                    ];
+                    response = jokes[Math.floor(Math.random() * jokes.length)];
+                } else if (lowerMessage.includes('help')) {
+                    response = "I can help you with questions, tell jokes, check time/date, and have conversations. Try asking me anything!";
+                } else {
+                    // Default responses based on mode
+                    const responses = {
+                        default: `I understand you're asking about "${userMessage}". This is a demo version, but in the full app I'd provide a detailed answer.`,
+                        nix: `Regarding "${userMessage}" - here's a quick answer: In the full version, I'd give you a concise response.`,
+                        blub: `Let me think deeply about "${userMessage}"... This is an interesting topic. In the complete application, I'd provide a thorough analysis with detailed reasoning and insights.`
+                    };
+                    response = responses[this.currentMode] || responses.default;
+                }
+                
+                // Add AI response
+                this.addMessage(response, 'ai');
+                this.saveToMemory(response, 'ai');
+                
+                // Auto-speak if enabled
+                if (this.autoSpeakEnabled && 'speechSynthesis' in window) {
+                    this.speak(response);
+                }
+            }
+
+            addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message-bubble ${sender}`;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.textContent = text;
+                
+                messageDiv.appendChild(contentDiv);
+                this.chatArea.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+                
+                // Add to chat history
+                this.chatHistory.push({ text, sender, timestamp: new Date().toISOString() });
+            }
+
+            showTypingIndicator() {
+                this.isTyping = true;
+                
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message-bubble ai';
+                typingDiv.id = 'typing-indicator';
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'message-content';
+                contentDiv.innerHTML = '<span class="loading"></span> Cyanix is typing...';
+                
+                typingDiv.appendChild(contentDiv);
+                this.chatArea.appendChild(typingDiv);
+                this.chatArea.scrollTop = this.chatArea.scrollHeight;
+            }
+
+            removeTypingIndicator() {
+                this.isTyping = false;
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            saveToMemory(message, sender) {
+                const memoryKey = `cyanix_memory_${this.currentUsername}`;
+                let memory = JSON.parse(localStorage.getItem(memoryKey) || '[]');
+                
+                memory.push({
+                    message,
+                    sender,
+                    timestamp: new Date().toISOString()
+                });
+                
+                // Keep only last 50 messages
+                if (memory.length > 50) {
+                    memory = memory.slice(-50);
+                }
+                
+                localStorage.setItem(memoryKey, JSON.stringify(memory));
+            }
+
+            loadConversationHistory() {
+                const memoryKey = `cyanix_memory_${this.currentUsername}`;
+                const memory = JSON.parse(localStorage.getItem(memoryKey) || '[]');
+                
+                // Clear current chat (except greeting)
+                const chatArea = this.chatArea;
+                while (chatArea.children.length > 0) {
+                    chatArea.removeChild(chatArea.firstChild);
+                }
+                
+                // Add messages from memory
+                memory.forEach(item => {
+                    this.addMessage(item.message, item.sender);
+                });
+            }
+
+            toggleMenu() {
+                this.menuOpen = !this.menuOpen;
+                
+                if (this.menuOpen) {
+                    this.menuPanel.classList.add('open');
+                    this.menuOverlay.style.display = 'block';
+                    setTimeout(() => {
+                        this.menuOverlay.style.opacity = '1';
+                    }, 10);
+                } else {
+                    this.menuPanel.classList.remove('open');
+                    this.menuOverlay.style.opacity = '0';
+                    setTimeout(() => {
+                        this.menuOverlay.style.display = 'none';
+                    }, 300);
+                }
+            }
+
+            setAiMode(mode) {
+                this.currentMode = mode;
+                this.saveSettings();
+                
+                const modeNames = {
+                    default: 'Cyanix',
+                    nix: 'Nix',
+                    blub: 'Nova'
+                };
+                
+                this.addMessage(`AI mode switched to ${modeNames[mode]}`, 'ai');
+                this.showNotification(`Mode switched to ${modeNames[mode]}`, 'success');
+                
+                // Close menu
+                this.toggleMenu();
+            }
+
+            clearChat() {
+                if (confirm('Are you sure you want to clear the chat?')) {
+                    this.chatArea.innerHTML = '';
+                    this.chatHistory = [];
+                    this.showNotification('Chat cleared', 'success');
+                    this.toggleMenu();
+                }
+            }
+
+            exportChat() {
+                const chatText = this.chatHistory.map(msg => {
+                    return `${msg.sender === 'user' ? 'You' : 'Cyanix'}: ${msg.text}`;
+                }).join('\n\n');
+                
+                const blob = new Blob([chatText], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `cyanix_chat_${new Date().toISOString().split('T')[0]}.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showNotification('Chat exported successfully', 'success');
+                this.toggleMenu();
+            }
+
+            loadMemory() {
+                this.loadConversationHistory();
+                this.showNotification('Memory loaded', 'success');
+                this.toggleMenu();
+            }
+
+            clearMemory() {
+                if (confirm('Are you sure you want to clear your memory? This cannot be undone.')) {
+                    const memoryKey = `cyanix_memory_${this.currentUsername}`;
+                    localStorage.setItem(memoryKey, JSON.stringify([]));
+                    this.chatArea.innerHTML = '';
+                    this.chatHistory = [];
+                    this.greetUser();
+                    this.showNotification('Memory cleared', 'success');
+                    this.toggleMenu();
+                }
+            }
+
+            logout() {
+                if (confirm('Are you sure you want to logout?')) {
+                    this.chatScreen.classList.remove('active');
+                    this.loginScreen.classList.add('active');
+                    this.currentUsername = '';
+                    this.chatArea.innerHTML = '';
+                    this.chatHistory = [];
+                    this.toggleMenu();
+                    this.showNotification('Logged out successfully', 'info');
+                }
+            }
+
+            speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = this.voiceSpeed;
+                    utterance.pitch = 1;
+                    utterance.volume = 1;
+                    window.speechSynthesis.speak(utterance);
+                }
+            }
+
+            checkOnlineStatus() {
+                this.isOnline = navigator.onLine;
+                
+                if (this.isOnline) {
+                    this.statusIndicator.style.backgroundColor = 'var(--success)';
+                    this.statusIndicator.classList.remove('status-offline');
+                } else {
+                    this.statusIndicator.style.backgroundColor = 'var(--danger)';
+                    this.statusIndicator.classList.add('status-offline');
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                const icon = this.notification.querySelector('.notification-icon');
+                icon.className = 'notification-icon';
+                
+                switch (type) {
+                    case 'success':
+                        icon.classList.add('notification-success');
+                        icon.innerHTML = '<i class="fas fa-check"></i>';
+                        break;
+                    case 'warning':
+                        icon.classList.add('notification-warning');
+                        icon.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+                        break;
+                    case 'danger':
+                        icon.classList.add('notification-danger');
+                        icon.innerHTML = '<i class="fas fa-times"></i>';
+                        break;
+                    default:
+                        icon.classList.add('notification-info');
+                        icon.innerHTML = '<i class="fas fa-info"></i>';
+                }
+                
+                this.notificationMessage.textContent = message;
+                this.notification.classList.add('show');
+                
+                setTimeout(() => {
+                    this.notification.classList.remove('show');
+                }, 3000);
+            }
+
+            saveSettings() {
+                const settings = {
+                    mode: this.currentMode,
+                    autoSpeak: this.autoSpeakEnabled,
+                    voiceSpeed: this.voiceSpeed
+                };
+                localStorage.setItem('cyanix_settings', JSON.stringify(settings));
+            }
+
+            loadSettings() {
+                const savedSettings = localStorage.getItem('cyanix_settings');
+                if (savedSettings) {
+                    const settings = JSON.parse(savedSettings);
+                    this.currentMode = settings.mode || 'default';
+                    this.autoSpeakEnabled = settings.autoSpeak !== false;
+                    this.voiceSpeed = settings.voiceSpeed || 0.9;
+                    
+                    // Update UI
+                    this.voiceSpeedSlider.value = this.voiceSpeed;
+                    this.autoSpeakSwitch.checked = this.autoSpeakEnabled;
+                    
+                    // Highlight current mode
+                    this.modeButtons.forEach(btn => {
+                        if (btn.getAttribute('data-mode') === this.currentMode) {
+                            btn.style.backgroundColor = 'var(--primary-color)';
+                            btn.style.color = 'white';
+                        } else {
+                            btn.style.backgroundColor = '';
+                            btn.style.color = '';
+                        }
+                    });
+                }
+                
+                // Load username if exists
+                const savedUsername = localStorage.getItem('cyanix_username');
+                if (savedUsername && window.location.hash !== '#login') {
+                    this.currentUsername = savedUsername;
+                    this.userAvatar.innerHTML = `<span>${savedUsername.charAt(0).toUpperCase()}</span>`;
+                    this.menuUsername.textContent = savedUsername;
+                    this.loginScreen.classList.remove('active');
+                    this.chatScreen.classList.add('active');
+                    this.greetUser();
+                }
+            }
+        }
+
+        // Initialize the app when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            const app = new CyanixApp();
+            window.cyanixApp = app; // Make accessible for debugging
+        });
+    </script>
+</body>
+</html>
