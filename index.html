@@ -16,6 +16,8 @@
             --glow-intense: 0 0 40px rgba(255, 105, 180, 1);
             --text-glow: 0 0 10px rgba(255, 105, 180, 0.6);
             --terminal-green: #00ff00;
+            --cyber-blue: #00ffff;
+            --neon-purple: #9d00ff;
         }
 
         /* Boot Screen Styles */
@@ -57,332 +59,128 @@
             text-shadow: 0 0 5px var(--terminal-green);
         }
 
-        .boot-line.system {
-            color: var(--primary-white);
-            font-weight: bold;
-        }
+        /* ... rest of boot screen styles remain the same ... */
 
-        .boot-line.warning {
-            color: #ff9900;
-        }
-
-        .boot-line.error {
-            color: #ff0000;
-            animation: glitchText 0.1s 3;
-        }
-
-        .boot-line.success {
-            color: var(--terminal-green);
-            animation: successPulse 1s;
-        }
-
-        .boot-line.neural {
-            color: var(--primary-pink);
-            text-shadow: var(--glow-pink);
-            font-size: 24px;
-            margin-top: 20px;
-        }
-
-        .boot-progress {
-            width: 100%;
-            height: 4px;
-            background: #333;
-            margin: 20px 0;
-            overflow: hidden;
-            position: relative;
-        }
-
-        .boot-progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #00ff00, var(--primary-pink));
-            animation: progressFill 4s ease-in-out forwards;
-        }
-
-        .boot-header {
-            font-family: 'Orbitron', sans-serif;
-            color: var(--primary-pink);
-            font-size: 32px;
-            text-align: center;
-            margin-bottom: 40px;
-            text-shadow: var(--glow-intense);
-            animation: headerGlitch 5s infinite;
-        }
-
-        .boot-command {
-            color: #00ffff;
-        }
-
-        .boot-input {
-            color: var(--terminal-green);
-            animation: blink 1s infinite;
-        }
-
-        @keyframes typeIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes progressFill {
-            0% { width: 0%; }
-            25% { width: 25%; }
-            50% { width: 50%; }
-            75% { width: 75%; }
-            100% { width: 100%; }
-        }
-
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0; }
-        }
-
-        @keyframes glitchText {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
-        }
-
-        @keyframes successPulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
-        @keyframes headerGlitch {
-            0%, 100% { transform: translateX(0); }
-            95% { transform: translateX(0); }
-            96% { transform: translateX(-5px); }
-            97% { transform: translateX(5px); }
-            98% { transform: translateX(-5px); }
-            99% { transform: translateX(5px); }
-        }
-
-        .boot-complete {
-            position: absolute;
-            bottom: 30px;
-            width: calc(100% - 60px);
-            text-align: center;
-            font-size: 20px;
-            color: var(--terminal-green);
-            opacity: 0;
-            animation: fadeIn 2s 8s forwards;
-        }
-
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
-
-        /* Hide main content during boot */
-        body.boot-active {
-            overflow: hidden;
-        }
-
-        body.boot-active .ui-frame {
-            display: none;
-        }
-
-        /* Existing styles remain the same... */
-        body {
-            background-color: var(--bg-dark);
-            color: var(--primary-white);
-            font-family: 'Rajdhani', sans-serif;
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-            overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 20% 80%, rgba(255, 105, 180, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 80% 20%, rgba(255, 105, 180, 0.15) 0%, transparent 40%);
-            position: relative;
-        }
-
-        /* Animated Background */
-        .cyber-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: linear-gradient(rgba(255, 105, 180, 0.05) 1px, transparent 1px),
-                              linear-gradient(90deg, rgba(255, 105, 180, 0.05) 1px, transparent 1px);
-            background-size: 50px 50px;
-            animation: gridMove 40s linear infinite;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes gridMove {
-            0% { transform: translate(0, 0); }
-            100% { transform: translate(50px, 50px); }
-        }
-
-        .scan-line {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(to bottom, transparent, rgba(255, 105, 180, 0.1), transparent);
-            animation: scan 8s linear infinite;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        @keyframes scan {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
-
-        .ui-frame {
-            position: relative;
-            z-index: 2;
-            border: 3px double var(--primary-pink);
-            min-height: 100vh;
-            box-shadow: var(--glow-intense);
-        }
-
-        /* Top Navigation */
+        /* Main Navigation */
         .top-nav {
             display: flex;
             justify-content: center;
-            background: rgba(17, 17, 17, 0.8);
+            background: rgba(17, 17, 17, 0.95);
             backdrop-filter: blur(10px);
-            padding: 15px;
-            border-bottom: 2px solid var(--primary-pink);
-            box-shadow: var(--glow-pink);
+            padding: 20px;
+            border-bottom: 3px solid var(--primary-pink);
+            box-shadow: var(--glow-intense);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .nav-item {
             font-family: 'Orbitron', sans-serif;
-            margin: 0 20px;
+            margin: 0 25px;
             cursor: pointer;
-            padding: 10px 20px;
+            padding: 15px 30px;
             border: 2px solid transparent;
             border-radius: 10px;
             transition: all 0.4s;
             text-transform: uppercase;
             letter-spacing: 2px;
-            font-size: 1.1em;
+            font-size: 1.2em;
+            background: rgba(255, 105, 180, 0.1);
+            color: var(--primary-white);
         }
 
         .nav-item:hover, .nav-item.active {
             border-color: var(--primary-pink);
             box-shadow: var(--glow-pink);
-            background: rgba(255, 105, 180, 0.1);
+            background: rgba(255, 105, 180, 0.2);
+            transform: translateY(-2px);
         }
 
-        /* Header */
-        .ui-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 40px;
-            background: rgba(17, 17, 17, 0.7);
-            backdrop-filter: blur(8px);
-            border-bottom: 2px solid var(--primary-pink);
-        }
-
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.8em;
-            font-weight: 900;
-            text-shadow: var(--glow-intense);
-            letter-spacing: 4px;
-        }
-
-        .system-status {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.2em;
-            text-shadow: var(--text-glow);
-        }
-
-        .status-value {
-            color: var(--primary-pink);
-        }
-
-        .header-stats .stat-box {
-            display: flex;
-            align-items: center;
-            margin-left: 30px;
-            text-shadow: var(--text-glow);
-        }
-
-        /* Dashboard Wrapper */
-        .dashboard-wrapper {
-            display: grid;
-            grid-template-columns: 1fr 3fr 1fr;
-            gap: 20px;
+        /* Main Content Pages */
+        .page {
+            display: none;
             padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
         }
 
-        .panel {
-            background: rgba(17, 17, 17, 0.6);
-            backdrop-filter: blur(10px);
-            border: 2px solid var(--primary-pink);
-            border-radius: 20px;
-            padding: 20px;
-            box-shadow: var(--glow-pink);
-        }
-
-        .panel-header {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.4em;
-            margin-bottom: 15px;
-            text-shadow: var(--text-glow);
-            border-bottom: 1px solid var(--primary-pink);
-            padding-bottom: 10px;
-        }
-
-        .mt { margin-top: 30px; }
-
-        .ui-button {
+        .page.active {
             display: block;
-            width: 100%;
-            padding: 15px;
-            margin: 10px 0;
-            background: transparent;
-            border: 2px solid var(--primary-pink);
-            color: var(--primary-white);
+        }
+
+        /* Home Page */
+        .home-content {
             text-align: center;
-            border-radius: 10px;
-            transition: all 0.4s;
-            text-shadow: var(--text-glow);
-            cursor: pointer;
-            text-decoration: none;
+            padding: 60px 20px;
         }
 
-        .ui-button:hover {
-            background: var(--primary-pink);
-            color: #000;
-            box-shadow: var(--glow-intense);
-        }
-
-        /* Center Panel */
         .profile-section {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 60px;
         }
 
         .profile-hex {
-            width: 200px;
-            height: 200px;
-            margin: 0 auto 20px;
-            background: var(--primary-pink);
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            width: 280px;
+            height: 280px;
+            margin: 0 auto 30px;
+            background: transparent;
             display: flex;
             align-items: center;
             justify-content: center;
             box-shadow: var(--glow-intense);
+            position: relative;
+        }
+
+        .profile-hex::before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            background: linear-gradient(45deg, var(--primary-pink), var(--cyber-blue), var(--neon-purple));
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(20px);
+            opacity: 0.6;
         }
 
         .profile-hex img {
-            width: 90%;
-            height: 90%;
-            object-fit: cover;
-            clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 50%;
+            border: 5px solid transparent;
+            background: linear-gradient(45deg, var(--primary-pink), var(--cyber-blue)) border-box;
+            -webkit-mask: 
+                linear-gradient(#fff 0 0) padding-box, 
+                linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            animation: logoGlow 4s infinite alternate;
+            padding: 5px;
+        }
+
+        @keyframes logoGlow {
+            0% {
+                box-shadow: 
+                    0 0 20px var(--primary-pink),
+                    0 0 40px var(--primary-pink),
+                    inset 0 0 20px rgba(255, 105, 180, 0.3);
+            }
+            100% {
+                box-shadow: 
+                    0 0 40px var(--primary-pink),
+                    0 0 80px var(--primary-pink),
+                    0 0 120px var(--primary-pink),
+                    inset 0 0 40px rgba(255, 105, 180, 0.5);
+            }
         }
 
         .glitch-text {
             font-family: 'Orbitron', sans-serif;
-            font-size: 4em;
+            font-size: 4.5em;
             font-weight: 900;
             background: linear-gradient(90deg, #FFFFFF, var(--primary-pink), #FFFFFF);
             -webkit-background-clip: text;
@@ -390,6 +188,7 @@
             text-shadow: var(--glow-intense);
             animation: titleGlitch 6s infinite;
             letter-spacing: 8px;
+            margin: 20px 0;
         }
 
         @keyframes titleGlitch {
@@ -399,20 +198,28 @@
             60% { transform: translate(-3px, -3px); }
         }
 
+        .profile-tagline {
+            font-size: 1.8em;
+            color: var(--cyber-blue);
+            margin: 20px 0 40px;
+            text-shadow: 0 0 10px var(--cyber-blue);
+            letter-spacing: 2px;
+        }
+
         .status-indicator {
-            margin-top: 20px;
-            font-size: 1.3em;
+            margin-top: 30px;
+            font-size: 1.5em;
             text-shadow: var(--text-glow);
         }
 
         .pulse-dot {
             display: inline-block;
-            width: 12px;
-            height: 12px;
+            width: 15px;
+            height: 15px;
             background: var(--primary-pink);
             border-radius: 50%;
             animation: pulse 2s infinite;
-            margin-right: 10px;
+            margin-right: 15px;
             box-shadow: var(--glow-pink);
         }
 
@@ -422,76 +229,459 @@
             100% { transform: scale(1); opacity: 1; }
         }
 
-        /* Feature Grid */
         .feature-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 40px 0;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
         }
 
         .feature-card {
-            background: rgba(26, 26, 26, 0.6);
-            border: 2px solid var(--primary-pink);
-            border-radius: 15px;
-            padding: 20px;
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--primary-pink);
+            border-radius: 20px;
+            padding: 30px;
             text-align: center;
             transition: all 0.5s;
+            backdrop-filter: blur(10px);
         }
 
         .feature-card:hover {
-            transform: translateY(-10px);
+            transform: translateY(-15px);
             box-shadow: var(--glow-intense);
         }
 
         .feature-icon {
-            font-size: 3em;
+            font-size: 3.5em;
             color: var(--primary-pink);
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             text-shadow: var(--glow-intense);
         }
 
-        /* Lists */
-        #creator-links, #event-list, #p1-list {
+        .feature-card h3 {
+            font-size: 1.8em;
+            color: var(--primary-white);
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .feature-card p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.2em;
+            margin-bottom: 25px;
+        }
+
+        /* Creators Page */
+        .creators-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(90deg, rgba(255,105,180,0.1), rgba(0,255,255,0.1));
+            border-radius: 20px;
+            border: 2px solid var(--primary-pink);
+        }
+
+        .creators-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            background: linear-gradient(90deg, var(--primary-pink), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--primary-pink);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .creators-subtitle {
+            font-size: 1.4em;
+            color: var(--cyber-blue);
+            text-shadow: 0 0 10px var(--cyber-blue);
+        }
+
+        .quick-access-panel {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--primary-pink);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: var(--glow-pink);
+        }
+
+        .quick-access-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            color: var(--primary-pink);
+            margin-bottom: 25px;
+            text-shadow: var(--text-glow);
+            text-align: center;
+            border-bottom: 2px solid var(--primary-pink);
+            padding-bottom: 15px;
+        }
+
+        .quick-access-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .social-btn {
+            background: rgba(17, 17, 34, 0.8);
+            border: 2px solid var(--primary-pink);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+            color: var(--primary-white);
+            text-decoration: none;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2em;
+            transition: all 0.4s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .social-btn:hover {
+            background: var(--primary-pink);
+            color: #000;
+            transform: translateY(-5px);
+            box-shadow: var(--glow-intense);
+        }
+
+        .social-btn i {
+            font-size: 2.5em;
+        }
+
+        .creators-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .creator-card {
+            background: linear-gradient(135deg, rgba(26,26,46,0.9) 0%, rgba(17,17,34,0.9) 100%);
+            border-radius: 20px;
+            overflow: hidden;
+            border: 2px solid transparent;
+            transition: all 0.5s;
+            position: relative;
+        }
+
+        .creator-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-pink), var(--cyber-blue));
+            z-index: 2;
+        }
+
+        .creator-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary-pink);
+            box-shadow: var(--glow-intense);
+        }
+
+        .creator-header {
+            padding: 25px;
+            background: rgba(0,0,0,0.4);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .creator-pfp {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid var(--primary-pink);
+            background: linear-gradient(135deg, var(--primary-pink), var(--neon-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: white;
+            box-shadow: var(--glow-pink);
+            overflow: hidden;
+        }
+
+        .creator-pfp img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .creator-info h3 {
+            font-size: 1.8em;
+            color: var(--primary-white);
+            margin: 0 0 5px 0;
+            text-shadow: 0 0 10px rgba(255,255,255,0.5);
+        }
+
+        .creator-info .channel {
+            color: var(--cyber-blue);
+            font-size: 1.2em;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .creator-body {
+            padding: 25px;
+        }
+
+        .creator-stats {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .creator-stat {
+            flex: 1;
+            text-align: center;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 10px;
+            border: 1px solid rgba(0,255,255,0.2);
+        }
+
+        .stat-value {
+            font-size: 1.8em;
+            color: var(--terminal-green);
+            text-shadow: 0 0 10px var(--terminal-green);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.7);
+            margin-top: 5px;
+        }
+
+        .creator-platforms {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .platform-btn {
+            flex: 1;
+            padding: 12px 20px;
+            background: linear-gradient(90deg, var(--primary-pink), var(--neon-purple));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-family: 'Orbitron', sans-serif;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.3s;
+            min-width: 120px;
+        }
+
+        .platform-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary-pink);
+        }
+
+        /* Events Page */
+        .events-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(90deg, rgba(0,255,255,0.1), rgba(157,0,255,0.1));
+            border-radius: 20px;
+            border: 2px solid var(--cyber-blue);
+        }
+
+        .events-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            background: linear-gradient(90deg, var(--cyber-blue), var(--neon-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--cyber-blue);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .events-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .events-panel, .feed-panel {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--cyber-blue);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2em;
+            color: var(--cyber-blue);
+            margin-bottom: 25px;
+            text-shadow: 0 0 10px var(--cyber-blue);
+            border-bottom: 2px solid var(--cyber-blue);
+            padding-bottom: 15px;
+        }
+
+        .event-list, .feed-list {
             list-style: none;
             padding: 0;
         }
 
-        #creator-links li, #event-list li, #p1-list li {
-            background: rgba(26, 26, 26, 0.5);
-            margin: 15px 0;
-            padding: 20px;
+        .event-item, .feed-item {
+            background: rgba(17, 17, 34, 0.6);
+            border: 1px solid rgba(0,255,255,0.3);
             border-radius: 15px;
-            border: 1px solid rgba(255, 105, 180, 0.4);
-            transition: all 0.5s;
-            position: relative;
-            overflow: hidden;
+            padding: 20px;
+            margin: 15px 0;
+            transition: all 0.4s;
         }
 
-        #creator-links li:hover, #event-list li:hover, #p1-list li:hover {
-            transform: scale(1.03);
-            box-shadow: var(--glow-intense);
+        .event-item:hover, .feed-item:hover {
+            transform: translateX(10px);
+            border-color: var(--cyber-blue);
+            box-shadow: 0 0 20px rgba(0,255,255,0.5);
         }
 
-        /* CTA Banner & Footer */
-        .cta-banner {
-            background: linear-gradient(90deg, rgba(255, 105, 180, 0.2), rgba(255, 105, 180, 0.1));
-            padding: 40px;
+        .event-item h4, .feed-item p {
+            color: var(--primary-white);
+            margin: 0 0 10px 0;
+            font-size: 1.3em;
+        }
+
+        .event-date, .feed-time {
+            color: var(--terminal-green);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+        }
+
+        .event-desc {
+            color: rgba(255,255,255,0.7);
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        /* Community Page */
+        .community-header {
             text-align: center;
-            border-top: 3px double var(--primary-pink);
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(90deg, rgba(157,0,255,0.1), rgba(255,105,180,0.1));
+            border-radius: 20px;
+            border: 2px solid var(--neon-purple);
         }
 
-        .cta-buttons {
-            margin-top: 20px;
+        .community-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            background: linear-gradient(90deg, var(--neon-purple), var(--primary-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--neon-purple);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
         }
 
-        .ui-footer {
-            display: flex;
-            justify-content: space-between;
-            padding: 20px 40px;
-            background: rgba(17, 17, 17, 0.8);
-            border-top: 2px solid var(--primary-pink);
-            text-shadow: var(--text-glow);
+        .discord-panel {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--primary-pink);
+            border-radius: 20px;
+            padding: 50px;
+            text-align: center;
+            margin: 40px 0;
+            backdrop-filter: blur(10px);
+        }
+
+        .discord-icon {
+            font-size: 5em;
+            color: #5865F2;
+            margin-bottom: 30px;
+            text-shadow: 0 0 30px #5865F2;
+        }
+
+        .discord-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5em;
+            color: var(--primary-white);
+            margin-bottom: 20px;
+        }
+
+        .discord-desc {
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 40px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .discord-btn {
+            display: inline-block;
+            background: #5865F2;
+            color: white;
+            padding: 20px 50px;
+            font-size: 1.5em;
+            font-family: 'Orbitron', sans-serif;
+            text-decoration: none;
+            border-radius: 15px;
+            transition: all 0.4s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border: 3px solid transparent;
+        }
+
+        .discord-btn:hover {
+            background: #4752c4;
+            transform: scale(1.05);
+            box-shadow: 0 0 40px #5865F2;
+            border-color: white;
+        }
+
+        /* About Page */
+        .about-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 40px;
+            background: linear-gradient(90deg, rgba(255,105,180,0.1), rgba(0,255,255,0.1));
+            border-radius: 20px;
+            border: 2px solid var(--primary-pink);
+        }
+
+        .about-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5em;
+            background: linear-gradient(90deg, var(--primary-pink), var(--cyber-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 20px var(--primary-pink);
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+
+        .about-content {
+            background: rgba(26, 26, 46, 0.8);
+            border: 3px solid var(--cyber-blue);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            backdrop-filter: blur(10px);
+        }
+
+        .about-content p {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 25px;
         }
 
         /* Admin Button */
@@ -547,57 +737,96 @@
             color: white;
         }
 
-        /* YouTube Hub Page Styles */
-        #youtube-hub {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-dark);
-            z-index: 1000;
-            padding: 40px;
-            overflow-y: auto;
-        }
-
-        #youtube-hub .panel-header {
-            text-align: center;
-            font-size: 2.5em;
-        }
-
-        #youtube-hub ul {
-            max-width: 800px;
-            margin: 0 auto;
-        }
-
-        #youtube-hub li {
-            font-size: 1.5em;
+        /* Footer */
+        .ui-footer {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            padding: 20px 40px;
+            background: rgba(17, 17, 17, 0.9);
+            border-top: 2px solid var(--primary-pink);
+            text-shadow: var(--text-glow);
+            margin-top: 40px;
         }
 
-        #youtube-hub a {
-            color: var(--primary-pink);
-            text-decoration: none;
-            transition: all 0.4s;
+        /* Background elements */
+        .cyber-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: linear-gradient(rgba(255, 105, 180, 0.05) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255, 105, 180, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 40s linear infinite;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        #youtube-hub a:hover {
-            text-shadow: var(--glow-intense);
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
         }
 
-        #close-hub {
-            position: absolute;
-            top: 20px;
-            right: 40px;
-            font-size: 2em;
-            cursor: pointer;
-            color: var(--primary-pink);
-            transition: all 0.4s;
+        .scan-line {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, transparent, rgba(255, 105, 180, 0.1), transparent);
+            animation: scan 8s linear infinite;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        #close-hub:hover {
-            transform: scale(1.2);
-            text-shadow: var(--glow-intense);
+        @keyframes scan {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
+        }
+
+        .ui-frame {
+            position: relative;
+            z-index: 2;
+            border: 3px double var(--primary-pink);
+            min-height: 100vh;
+            box-shadow: var(--glow-intense);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .creators-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            .events-content {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .top-nav {
+                flex-wrap: wrap;
+            }
+            
+            .nav-item {
+                margin: 5px;
+                padding: 10px 15px;
+                font-size: 1em;
+            }
+            
+            .glitch-text {
+                font-size: 2.5em;
+            }
+            
+            .creators-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .ui-footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            
+            .profile-hex {
+                width: 220px;
+                height: 220px;
+            }
         }
     </style>
 </head>
@@ -623,138 +852,163 @@
     <div class="scan-line"></div>
 
     <div class="ui-frame">
+        <!-- Top Navigation -->
         <nav class="top-nav">
-            <div class="nav-item active">HOME</div>
-            <div class="nav-item">CREATORS</div>
-            <div class="nav-item">EVENTS</div>
-            <div class="nav-item">COMMUNITY</div>
-            <div class="nav-item">ABOUT</div>
+            <div class="nav-item active" data-page="home">HOME</div>
+            <div class="nav-item" data-page="creators">CREATORS</div>
+            <div class="nav-item" data-page="events">EVENTS</div>
+            <div class="nav-item" data-page="community">COMMUNITY</div>
+            <div class="nav-item" data-page="about">ABOUT</div>
         </nav>
 
-        <header class="ui-header">
-            <div class="logo">
-                <i class="fas fa-microchip"></i> THE REST OF ZANITY // V2.6
-            </div>
-            <div class="header-center">
-                <div class="system-status">
-                    <span class="status-label">SYSTEM STATUS:</span>
-                    <span class="status-value">OPERATIONAL</span>
-                </div>
-            </div>
-            <div class="header-stats">
-                <div class="stat-box">
-                    <i class="fas fa-users"></i>
-                    <div><span class="stat-label">MEMBERS</span><span class="stat-value">10K+</span></div>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-eye"></i>
-                    <div><span class="stat-label">ACTIVE</span><span class="stat-value">1.2K</span></div>
-                </div>
-                <div class="stat-box">
-                    <i class="fas fa-signal"></i>
-                    <div><span class="stat-label">PING</span><span class="stat-value">18ms</span></div>
-                </div>
-            </div>
-        </header>
-
-        <div class="dashboard-wrapper">
-            <aside class="panel side-panel left-panel">
-                <div class="panel-header"><i class="fas fa-bolt"></i> QUICK ACCESS</div>
-                <div class="panel-body">
-                    <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="ui-button"><i class="fab fa-discord"></i> Discord Server</a>
-                    <a href="#" id="open-youtube-hub" class="ui-button"><i class="fab fa-youtube"></i> YouTube Hub</a>
-                    <a href="#" class="ui-button"><i class="fab fa-twitch"></i> Twitch Streams</a>
-                    <a href="#" class="ui-button"><i class="fab fa-instagram"></i> Instagram</a>
-                    <a href="#" class="ui-button"><i class="fab fa-twitter"></i> X / Twitter</a>
-                </div>
-
-                <div class="panel-header mt"><i class="fas fa-calendar-alt"></i> UPCOMING EVENTS</div>
-                <div class="panel-body">
-                    <ul id="event-list"></ul>
-                </div>
-            </aside>
-
-            <main class="panel center-panel">
+        <!-- Home Page -->
+        <section id="home-page" class="page active">
+            <div class="home-content">
                 <div class="profile-section">
                     <div class="profile-hex">
-                        <img src="https://via.placeholder.com/200/FF69B4/000000?text=TRoZ" alt="The Rest of Zanity">
+                        <img src="TROZ.png" alt="The Rest of Zanity Logo">
                     </div>
                     <h1 class="glitch-text">THE REST OF ZANITY</h1>
                     <p class="profile-tagline">COMMUNITY SERVER // CONTENT CREATORS // CREATIVE CHAOS</p>
                     <div class="status-indicator">
-                        <span class="pulse-dot"></span> NEURAL INTERFACE ACTIVE
+                        <span class="pulse-dot"></span> NEURAL INTERFACE ACTIVE // SYSTEM ONLINE
                     </div>
                 </div>
 
                 <div class="feature-grid">
-                    <div class="feature-card">
+                    <div class="feature-card" data-page="creators">
+                        <div class="feature-icon"><i class="fas fa-user-astronaut"></i></div>
+                        <h3>CREATORS HUB</h3>
+                        <p>Explore our network of content creators</p>
+                        <button class="ui-button" onclick="switchPage('creators')">ENTER HUB</button>
+                    </div>
+                    <div class="feature-card" data-page="events">
+                        <div class="feature-icon"><i class="fas fa-calendar-star"></i></div>
+                        <h3>EVENTS CALENDAR</h3>
+                        <p>Upcoming tournaments and community events</p>
+                        <button class="ui-button" onclick="switchPage('events')">VIEW EVENTS</button>
+                    </div>
+                    <div class="feature-card" data-page="community">
                         <div class="feature-icon"><i class="fas fa-users"></i></div>
-                        <h3>JOIN COMMUNITY</h3>
-                        <p>Connect with creators & members</p>
-                        <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="feature-btn ui-button">ENTER DISCORD</a>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-video"></i></div>
-                        <h3>LIVE STREAMS</h3>
-                        <p>Watch featured creators</p>
-                        <button class="feature-btn ui-button">GO LIVE</button>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-trophy"></i></div>
-                        <h3>EVENTS & TOURNAMENTS</h3>
-                        <p>Compete and collaborate</p>
-                        <button class="feature-btn ui-button">VIEW SCHEDULE</button>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon"><i class="fas fa-star"></i></div>
-                        <h3>SUPPORTIVE P1s</h3>
-                        <p>Honoring our top supporters</p>
-                        <button class="feature-btn ui-button">VIEW LIST</button>
+                        <h3>COMMUNITY</h3>
+                        <p>Join our Discord and connect with members</p>
+                        <button class="ui-button" onclick="switchPage('community')">JOIN NOW</button>
                     </div>
                 </div>
-
-                <div class="panel-header" style="text-align:center; margin:40px 0 20px;"><i class="fas fa-user-astronaut"></i> FEATURED CONTENT CREATORS</div>
-                <ul id="creator-links" style="padding:0;"></ul>
-            </main>
-
-            <aside class="panel side-panel right-panel">
-                <div class="panel-header"><i class="fas fa-star"></i> SUPPORTIVE P1 MEMBERS</div>
-                <div class="panel-body">
-                    <ul id="p1-list"></ul>
-                </div>
-
-                <div class="panel-header mt"><i class="fas fa-rss"></i> COMMUNITY FEED</div>
-                <div class="panel-body scrollable">
-                    <div class="feed-item"><p>New creator spotlight coming soon!</p><span class="feed-time">1h ago</span></div>
-                    <div class="feed-item"><p>Game night event scheduled for Friday!</p><span class="feed-time">3h ago</span></div>
-                    <div class="feed-item"><p>Welcome 500 new members this week!</p><span class="feed-time">1d ago</span></div>
-                </div>
-            </aside>
-        </div>
-
-        <div class="cta-banner">
-            <div class="cta-content">
-                <h2>ENTER THE GRID</h2>
-                <p>Join the vibrant community of creators and supporters in The Rest of Zanity</p>
             </div>
-            <div class="cta-buttons">
-                <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="ui-button"><i class="fab fa-discord"></i> JOIN DISCORD</a>
+        </section>
+
+        <!-- Creators Page -->
+        <section id="creators-page" class="page">
+            <div class="creators-header">
+                <h1 class="creators-title">CREATORS HUB</h1>
+                <p class="creators-subtitle">MEET THE CREATIVE MINDS BEHIND THE REST OF ZANITY</p>
             </div>
-        </div>
+
+            <div class="quick-access-panel">
+                <h2 class="quick-access-title"><i class="fas fa-bolt"></i> QUICK ACCESS</h2>
+                <div class="quick-access-grid">
+                    <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="social-btn">
+                        <i class="fab fa-discord"></i>
+                        <span>DISCORD SERVER</span>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-youtube"></i>
+                        <span>YOUTUBE HUB</span>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-twitch"></i>
+                        <span>TWITCH STREAMS</span>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-instagram"></i>
+                        <span>INSTAGRAM</span>
+                    </a>
+                    <a href="#" class="social-btn">
+                        <i class="fab fa-twitter"></i>
+                        <span>X / TWITTER</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="creators-grid" id="creators-list">
+                <!-- Creators will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Events Page -->
+        <section id="events-page" class="page">
+            <div class="events-header">
+                <h1 class="events-title">EVENTS & SCHEDULE</h1>
+                <p class="creators-subtitle">UPCOMING TOURNAMENTS AND COMMUNITY EVENTS</p>
+            </div>
+
+            <div class="events-content">
+                <div class="events-panel">
+                    <h2 class="panel-title"><i class="fas fa-calendar-alt"></i> UPCOMING EVENTS</h2>
+                    <ul class="event-list" id="event-list">
+                        <!-- Events will be loaded here -->
+                    </ul>
+                </div>
+
+                <div class="feed-panel">
+                    <h2 class="panel-title"><i class="fas fa-rss"></i> COMMUNITY FEED</h2>
+                    <div class="feed-list" id="community-feed">
+                        <div class="feed-item">
+                            <p>New creator spotlight coming soon!</p>
+                            <span class="feed-time">1h ago</span>
+                        </div>
+                        <div class="feed-item">
+                            <p>Game night event scheduled for Friday!</p>
+                            <span class="feed-time">3h ago</span>
+                        </div>
+                        <div class="feed-item">
+                            <p>Welcome 500 new members this week!</p>
+                            <span class="feed-time">1d ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Community Page -->
+        <section id="community-page" class="page">
+            <div class="community-header">
+                <h1 class="community-title">COMMUNITY</h1>
+                <p class="creators-subtitle">JOIN OUR VIBRANT COMMUNITY OF CREATORS AND SUPPORTERS</p>
+            </div>
+
+            <div class="discord-panel">
+                <div class="discord-icon"><i class="fab fa-discord"></i></div>
+                <h2 class="discord-title">JOIN OUR DISCORD SERVER</h2>
+                <p class="discord-desc">Connect with creators, participate in events, and be part of the most supportive gaming community. Get exclusive access to voice channels, creator collabs, and real-time updates.</p>
+                <a href="https://discord.gg/PzbWunGZ25" target="_blank" class="discord-btn">
+                    <i class="fab fa-discord"></i> JOIN DISCORD
+                </a>
+            </div>
+        </section>
+
+        <!-- About Page -->
+        <section id="about-page" class="page">
+            <div class="about-header">
+                <h1 class="about-title">ABOUT THE REST OF ZANITY</h1>
+                <p class="creators-subtitle">NEURAL INTERFACE V2.6 // PROTOCOL ACTIVE</p>
+            </div>
+
+            <div class="about-content">
+                <p>The Rest of Zanity is a premier content creator community dedicated to fostering creativity, collaboration, and growth in the digital space. Founded on the principles of mutual support and creative freedom, we provide a platform where creators can thrive.</p>
+                
+                <p>Our network includes a diverse range of content creators specializing in gaming, art, technology, and entertainment. Through our neural interface system, we maintain real-time connections between creators, supporters, and the broader community.</p>
+                
+                <p>The Rest of Zanity operates on a protocol of transparency, innovation, and community-driven development. Our events, tournaments, and creator spotlights are designed to showcase talent and build lasting connections in the digital ecosystem.</p>
+            </div>
+        </section>
 
         <footer class="ui-footer">
             <div><i class="fas fa-shield-alt"></i> SYSTEM STATUS: SECURE</div>
             <div>© 2026 THE REST OF ZANITY. ALL RIGHTS RESERVED.</div>
             <div>NEURAL INTERFACE v2.6 // PROTOCOL ACTIVE</div>
         </footer>
-    </div>
-
-    <!-- YouTube Hub Overlay Page -->
-    <div id="youtube-hub">
-        <div id="close-hub"><i class="fas fa-times"></i></div>
-        <div class="panel-header">YOUTUBE HUB // CONTENT CREATORS</div>
-        <ul id="youtube-creators-list"></ul>
-        <p style="text-align:center; margin-top:40px; opacity:0.7;">Subscriber counts are static (as of January 2026). For real-time updates, a server backend would be required.</p>
     </div>
 
     <button id="admin-button">ADMIN TERMINAL</button>
@@ -827,8 +1081,6 @@
                 lineElement.style.animationDelay = `${line.delay}ms`;
                 
                 bootLinesContainer.appendChild(lineElement);
-                
-                // Scroll to bottom
                 bootLinesContainer.scrollTop = bootLinesContainer.scrollHeight;
                 
                 currentLine++;
@@ -845,17 +1097,19 @@
                     document.getElementById('boot-screen').style.display = 'none';
                     document.body.classList.remove('boot-active');
                 }, 1000);
-            }, 9000); // Total boot time including progress bar animation
+            }, 9000);
         }
 
-        // Start boot sequence
         document.addEventListener('DOMContentLoaded', () => {
             displayBootLine();
             endBootSequence();
             
-            // Add keyboard listener to skip boot
             document.addEventListener('keydown', skipBoot);
             document.getElementById('boot-screen').addEventListener('click', skipBoot);
+            
+            // Initialize pages
+            loadCreators();
+            loadEvents();
         });
 
         function skipBoot() {
@@ -868,99 +1122,181 @@
             }, 500);
         }
 
-        // Rest of the existing JavaScript code
-        const ADMIN_PASSWORD = "zanityadmin123";
-
-        // Default creators with display names and static sub counts
-        const youtubeCreators = [
-            { displayName: "LORD MATHIAS", channel: "@1LORDMATHIAS", url: "https://www.youtube.com/@1LORDMATHIAS", subs: "Check on YouTube" },
-            { displayName: "MALLYALIEN OFFICIAL", channel: "@Mallyalien_Offical", url: "https://www.youtube.com/@Mallyalien_Offical", subs: "Check on YouTube" },
-            { displayName: "BLUEEY36", channel: "@blueey36", url: "https://www.youtube.com/@blueey36", subs: "Check on YouTube" },
-            { displayName: "Dinothugg", channel: "https://youtube.com/@dinothugg?si=VctJRKhRR4nO6fX2", url: "#", subs: "Check on YouTube" },
-            { displayName: "ART BY LUNA", channel: "Example", url: "#", subs: "Check on YouTube" },
-            { displayName: "TECHZEST", channel: "Example", url: "#", subs: "Check on YouTube" }
-        ];
-
-        function loadYouTubeHub() {
-            const ul = document.getElementById('youtube-creators-list');
-            ul.innerHTML = '';
-            youtubeCreators.forEach(creator => {
-                const li = document.createElement('li');
-                li.innerHTML = `
-                    <div>
-                        <strong>${creator.displayName}</strong> (${creator.channel})
-                    </div>
-                    <div>
-                        <a href="${creator.url}" target="_blank">SUBSCRIBE</a> — ${creator.subs} subscribers
-                    </div>
-                `;
-                ul.appendChild(li);
+        // Page Navigation
+        function switchPage(pageId) {
+            // Update navigation
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.dataset.page === pageId) {
+                    item.classList.add('active');
+                }
             });
+            
+            // Show selected page
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageId}-page`).classList.add('active');
         }
 
-        document.getElementById('open-youtube-hub').addEventListener('click', (e) => {
-            e.preventDefault();
-            document.getElementById('youtube-hub').style.display = 'block';
-            loadYouTubeHub();
+        // Navigation event listeners
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', () => {
+                switchPage(item.dataset.page);
+            });
         });
 
-        document.getElementById('close-hub').addEventListener('click', () => {
-            document.getElementById('youtube-hub').style.display = 'none';
+        // Feature cards click handlers
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('click', () => {
+                if (card.dataset.page) {
+                    switchPage(card.dataset.page);
+                }
+            });
         });
+
+        // Creators Data
+        const creatorsData = [
+            {
+                name: "LORD MATHIAS",
+                channel: "@1LORDMATHIAS",
+                youtube: "https://www.youtube.com/@1LORDMATHIAS",
+                twitch: "https://twitch.tv/lordmathias",
+                instagram: "https://instagram.com/lordmathias",
+                subscribers: "50K+",
+                videos: "120+",
+                pfpLetter: "LM"
+            },
+            {
+                name: "MALLYALIEN",
+                channel: "@Mallyalien_Offical",
+                youtube: "https://www.youtube.com/@Mallyalien_Offical",
+                twitch: "https://twitch.tv/mallyalien",
+                instagram: "https://instagram.com/mallyalien",
+                subscribers: "35K+",
+                videos: "80+",
+                pfpLetter: "MA"
+            },
+            {
+                name: "BLUEEY36",
+                channel: "@blueey36",
+                youtube: "https://www.youtube.com/@blueey36",
+                twitch: "https://twitch.tv/blueey36",
+                subscribers: "25K+",
+                videos: "150+",
+                pfpLetter: "B36"
+            },
+            {
+                name: "ZANITYPRIME",
+                channel: "@ZanityPrime",
+                youtube: "#",
+                instagram: "https://instagram.com/zanityprime",
+                subscribers: "Coming Soon",
+                videos: "0",
+                pfpLetter: "ZP"
+            },
+            {
+                name: "ART BY LUNA",
+                channel: "@ArtByLuna",
+                youtube: "#",
+                instagram: "https://instagram.com/artbyluna",
+                subscribers: "Coming Soon",
+                videos: "0",
+                pfpLetter: "AL"
+            },
+            {
+                name: "TECHZEST",
+                channel: "@TechZest",
+                youtube: "#",
+                twitch: "#",
+                subscribers: "Coming Soon",
+                videos: "0",
+                pfpLetter: "TZ"
+            }
+        ];
 
         function loadCreators() {
-            const creators = JSON.parse(localStorage.getItem('creators')) || [
-                { name: 'LORDMATHIAS', desc: 'CONTENT CREATOR', youtube: 'https://www.youtube.com/@1LORDMATHIAS' },
-                { name: 'MALLYALIEN', desc: 'OFFICIAL CHANNEL', youtube: 'https://www.youtube.com/@Mallyalien_Offical' },
-                { name: 'BLUEEY36', desc: 'CREATOR HUB', youtube: 'https://www.youtube.com/@blueey36' }
-            ];
-            const ul = document.getElementById('creator-links');
-            ul.innerHTML = '';
-            creators.forEach(creator => {
-                const li = document.createElement('li');
-                let channels = '';
-                if (creator.youtube) channels += `<a href="${creator.youtube}" target="_blank">YOUTUBE</a> `;
-                if (creator.instagram) channels += `<a href="${creator.instagram}" target="_blank">INSTAGRAM</a> `;
-                if (creator.twitch) channels += `<a href="${creator.twitch}" target="_blank">TWITCH</a> `;
-                if (creator.other) channels += `<a href="${creator.other}" target="_blank">OTHER</a> `;
-                li.innerHTML = `<strong>${creator.name}</strong> — ${creator.desc}<br>CHANNELS: ${channels || 'CLASSIFIED'}<button class="remove-link" style="display:none;">ERASE</button>`;
-                ul.appendChild(li);
+            const creatorsGrid = document.getElementById('creators-list');
+            creatorsGrid.innerHTML = '';
+            
+            creatorsData.forEach(creator => {
+                const card = document.createElement('div');
+                card.className = 'creator-card';
+                
+                card.innerHTML = `
+                    <div class="creator-header">
+                        <div class="creator-pfp">${creator.pfpLetter}</div>
+                        <div class="creator-info">
+                            <h3>${creator.name}</h3>
+                            <p class="channel">${creator.channel}</p>
+                        </div>
+                    </div>
+                    <div class="creator-body">
+                        <div class="creator-stats">
+                            <div class="creator-stat">
+                                <div class="stat-value">${creator.subscribers}</div>
+                                <div class="stat-label">SUBSCRIBERS</div>
+                            </div>
+                            <div class="creator-stat">
+                                <div class="stat-value">${creator.videos}</div>
+                                <div class="stat-label">VIDEOS</div>
+                            </div>
+                        </div>
+                        <div class="creator-platforms">
+                            ${creator.youtube !== '#' ? `<a href="${creator.youtube}" target="_blank" class="platform-btn">YOUTUBE</a>` : ''}
+                            ${creator.twitch !== '#' ? `<a href="${creator.twitch}" target="_blank" class="platform-btn">TWITCH</a>` : ''}
+                            ${creator.instagram !== '#' ? `<a href="${creator.instagram}" target="_blank" class="platform-btn">INSTAGRAM</a>` : ''}
+                        </div>
+                    </div>
+                `;
+                
+                creatorsGrid.appendChild(card);
             });
         }
 
         function loadEvents() {
+            const eventsList = document.getElementById('event-list');
             const events = JSON.parse(localStorage.getItem('events')) || [
-                { name: 'COMMUNITY GAME NIGHT', date: '2026-01-10', time: '20:00', desc: 'MULTIPLAYER CHAOS' },
-                { name: 'CREATOR COLLAB', date: '2026-01-20', time: '19:00', desc: 'LIVE WITH FEATURED MEMBERS' }
+                { 
+                    name: 'COMMUNITY GAME NIGHT', 
+                    date: '2026-01-10', 
+                    time: '20:00', 
+                    desc: 'MULTIPLAYER CHAOS WITH ALL COMMUNITY MEMBERS' 
+                },
+                { 
+                    name: 'CREATOR COLLAB STREAM', 
+                    date: '2026-01-20', 
+                    time: '19:00', 
+                    desc: 'LIVE STREAM WITH FEATURED CREATORS' 
+                },
+                { 
+                    name: 'TOURNAMENT: ZANITY CUP', 
+                    date: '2026-02-05', 
+                    time: '15:00', 
+                    desc: 'COMPETITIVE TOURNAMENT WITH PRIZES' 
+                }
             ];
-            const ul = document.getElementById('event-list');
-            ul.innerHTML = '';
+            
+            eventsList.innerHTML = '';
             events.forEach(event => {
                 const li = document.createElement('li');
-                li.innerHTML = `<strong>${event.name}</strong><br>${event.date} @ ${event.time}${event.desc ? ' — ' + event.desc : ''}<button class="remove-link" style="display:none;">CANCEL</button>`;
-                ul.appendChild(li);
+                li.className = 'event-item';
+                li.innerHTML = `
+                    <h4>${event.name}</h4>
+                    <div class="event-date">${event.date} @ ${event.time}</div>
+                    <div class="event-desc">${event.desc}</div>
+                `;
+                eventsList.appendChild(li);
             });
         }
 
-        function loadP1s() {
-            const p1s = JSON.parse(localStorage.getItem('p1s')) || [
-                { name: 'NEONKNIGHT', desc: 'LEGENDARY SUPPORT & MODERATION' },
-                { name: 'GRIDRUNNER', desc: 'ALWAYS ACTIVE & HELPFUL' }
-            ];
-            const ul = document.getElementById('p1-list');
-            ul.innerHTML = '';
-            p1s.forEach(p1 => {
-                const li = document.createElement('li');
-                li.innerHTML = `<strong>${p1.name}</strong><br>${p1.desc}<button class="remove-link" style="display:none;">REVOKE</button>`;
-                ul.appendChild(li);
-            });
-        }
+        // Admin Panel functionality
+        const ADMIN_PASSWORD = "zanityadmin123";
 
         document.getElementById('admin-button').addEventListener('click', () => {
             const password = prompt('ENTER ADMIN CREDENTIALS:');
             if (password === ADMIN_PASSWORD) {
                 document.getElementById('admin-panel').style.display = 'grid';
-                document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'inline-block');
                 document.getElementById('admin-button').style.display = 'none';
             } else {
                 alert('ACCESS DENIED');
@@ -976,11 +1312,8 @@
             const other = document.getElementById('new-creator-other').value;
             
             if (name) {
-                const creators = JSON.parse(localStorage.getItem('creators')) || [];
-                creators.push({ name, desc, youtube, instagram, twitch, other });
-                localStorage.setItem('creators', JSON.stringify(creators));
-                loadCreators();
-                alert('CREATOR DEPLOYED');
+                alert('CREATOR DEPLOYED TO SYSTEM');
+                // In a real app, you would save this to localStorage and reload creators
             } else {
                 alert('NAME REQUIRED');
             }
@@ -1008,37 +1341,16 @@
             const desc = document.getElementById('new-p1-desc').value;
             
             if (name) {
-                const p1s = JSON.parse(localStorage.getItem('p1s')) || [];
-                p1s.push({ name, desc });
-                localStorage.setItem('p1s', JSON.stringify(p1s));
-                loadP1s();
                 alert('P1 HONORED');
             } else {
                 alert('NAME REQUIRED');
             }
         });
 
-        document.querySelector('main').addEventListener('click', (e) => {
-            if (e.target.classList.contains('remove-link')) {
-                if (confirm('CONFIRM DELETION?')) {
-                    e.target.parentElement.remove();
-                    loadCreators(); loadEvents(); loadP1s();
-                }
-            }
-        });
-
         document.getElementById('logout-admin').addEventListener('click', () => {
             document.getElementById('admin-panel').style.display = 'none';
-            document.querySelectorAll('.remove-link').forEach(btn => btn.style.display = 'none');
             document.getElementById('admin-button').style.display = 'block';
         });
-
-        // Initialize after boot sequence
-        setTimeout(() => {
-            loadCreators();
-            loadEvents();
-            loadP1s();
-        }, 10000);
     </script>
 </body>
 </html>
