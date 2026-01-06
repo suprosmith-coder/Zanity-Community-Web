@@ -904,6 +904,44 @@
             font-size: 1.1em;
         }
 
+        /* API Status Indicator */
+        .api-status {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9em;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+            border: 2px solid;
+            animation: statusPulse 2s infinite;
+        }
+
+        .api-status.loading {
+            background: rgba(255, 165, 0, 0.2);
+            border-color: var(--neon-orange);
+            color: var(--neon-orange);
+        }
+
+        .api-status.success {
+            background: rgba(0, 255, 0, 0.2);
+            border-color: var(--terminal-green);
+            color: var(--terminal-green);
+        }
+
+        .api-status.error {
+            background: rgba(255, 0, 0, 0.2);
+            border-color: #FF0000;
+            color: #FF0000;
+        }
+
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
         /* Responsive Design */
         @media (max-width: 1200px) {
             .creators-grid {
@@ -950,6 +988,13 @@
             .feature-grid {
                 grid-template-columns: 1fr;
             }
+            
+            .api-status {
+                bottom: 10px;
+                left: 10px;
+                right: 10px;
+                font-size: 0.8em;
+            }
         }
 
         /* Frame */
@@ -995,31 +1040,6 @@
         @keyframes pageFadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Empty Creators Message */
-        .empty-creators {
-            text-align: center;
-            padding: 100px;
-            background: rgba(10, 10, 20, 0.7);
-            border: 3px dashed var(--primary-pink);
-            border-radius: 30px;
-            margin-top: 50px;
-        }
-
-        .empty-creators h3 {
-            font-size: 2.5em;
-            color: var(--cyber-blue);
-            margin-bottom: 30px;
-            text-shadow: 
-                0 0 20px var(--cyber-blue),
-                0 0 40px var(--cyber-blue);
-        }
-
-        .empty-creators p {
-            font-size: 1.4em;
-            color: rgba(255, 255, 255, 0.8);
-            margin-bottom: 40px;
         }
 
         /* Boot Screen Styles */
@@ -1370,6 +1390,11 @@
         </div>
     </div>
 
+    <!-- API Status Indicator -->
+    <div id="api-status" class="api-status loading">
+        <i class="fas fa-sync-alt fa-spin"></i> FETCHING CREATOR STATS...
+    </div>
+
     <!-- Neon Particles -->
     <div id="neon-particles"></div>
 
@@ -1458,7 +1483,7 @@
 
             <div class="creators-grid" id="creators-list">
                 <!-- Gauge -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="gauge_gaming">
                     <div class="creator-header">
                         <div class="creator-pfp">G</div>
                         <div class="creator-info">
@@ -1469,11 +1494,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">1.5K+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">50+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1484,7 +1513,7 @@
                 </div>
 
                 <!-- Xiriuz -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="xiriuz750">
                     <div class="creator-header">
                         <div class="creator-pfp">X</div>
                         <div class="creator-info">
@@ -1495,11 +1524,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">750+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">30+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1510,7 +1543,7 @@
                 </div>
 
                 <!-- Dinothugg -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="dinothugg">
                     <div class="creator-header">
                         <div class="creator-pfp">D</div>
                         <div class="creator-info">
@@ -1521,11 +1554,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">2K+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">100+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1536,7 +1573,7 @@
                 </div>
 
                 <!-- Blueey -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="blueey36">
                     <div class="creator-header">
                         <div class="creator-pfp">B</div>
                         <div class="creator-info">
@@ -1547,11 +1584,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">1K+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">40+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1562,7 +1603,7 @@
                 </div>
 
                 <!-- MallyTheAlien -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="mallyalien_offical">
                     <div class="creator-header">
                         <div class="creator-pfp">M</div>
                         <div class="creator-info">
@@ -1573,11 +1614,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">500+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">25+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1589,7 +1634,7 @@
                 </div>
 
                 <!-- Lord Mathias -->
-                <div class="creator-card">
+                <div class="creator-card" data-youtube-handle="1lordmathias">
                     <div class="creator-header">
                         <div class="creator-pfp">LM</div>
                         <div class="creator-info">
@@ -1600,11 +1645,15 @@
                     <div class="creator-body">
                         <div class="creator-stats">
                             <div class="creator-stat">
-                                <div class="stat-value">1K+</div>
+                                <div class="stat-value" data-stat="subscribers">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">SUBSCRIBERS</div>
                             </div>
                             <div class="creator-stat">
-                                <div class="stat-value">35+</div>
+                                <div class="stat-value" data-stat="videos">
+                                    <i class="fas fa-spinner fa-spin"></i>
+                                </div>
                                 <div class="stat-label">VIDEOS</div>
                             </div>
                         </div>
@@ -1649,8 +1698,8 @@
                     <h2 class="panel-title"><i class="fas fa-rss"></i> COMMUNITY FEED</h2>
                     <div class="feed-list" id="community-feed">
                         <div class="feed-item">
-                            <p>New creator spotlight coming soon!</p>
-                            <span class="feed-time">1h ago</span>
+                            <p>Real-time stats now active for all creators!</p>
+                            <span class="feed-time">Just now</span>
                         </div>
                         <div class="feed-item">
                             <p>Game night event scheduled for Friday!</p>
@@ -1710,6 +1759,23 @@
     </div>
 
     <script>
+        // ===========================================
+        // YOUTUBE DATA API CONFIGURATION
+        // ===========================================
+        // REPLACE THIS WITH YOUR YOUTUBE API KEY
+        // Get it from: https://console.cloud.google.com/apis/credentials
+        const YOUTUBE_API_KEY = 'AIzaSyD2MPxrwfCstJiDi5xUn99wt3ReCi9bOKE'; // Replace with your actual API key
+        
+        // Creator handles mapping
+        const creatorHandles = {
+            'gauge_gaming': 'Gauge',
+            'xiriuz750': 'Xiriuz',
+            'dinothugg': 'Dinothugg',
+            'blueey36': 'Blueey',
+            'mallyalien_offical': 'MallyTheAlien',
+            '1lordmathias': 'Lord Mathias'
+        };
+
         // Create neon particles
         function createParticles() {
             const container = document.getElementById('neon-particles');
@@ -1725,6 +1791,168 @@
         }
 
         // ===========================================
+        // YOUTUBE API FUNCTIONS
+        // ===========================================
+        async function getYouTubeChannelStats(handle) {
+            if (!YOUTUBE_API_KEY || YOUTUBE_API_KEY === 'YOUR_API_KEY_HERE') {
+                throw new Error('Please set your YouTube API key in the code');
+            }
+
+            try {
+                // First, get channel ID by handle
+                const channelResponse = await fetch(
+                    `https://www.googleapis.com/youtube/v3/channels?part=id,snippet,statistics&forHandle=${handle}&key=${YOUTUBE_API_KEY}`
+                );
+                
+                const channelData = await channelResponse.json();
+                
+                if (!channelData.items || channelData.items.length === 0) {
+                    throw new Error(`Channel @${handle} not found`);
+                }
+                
+                const channel = channelData.items[0];
+                return {
+                    subscribers: parseInt(channel.statistics.subscriberCount),
+                    videos: parseInt(channel.statistics.videoCount),
+                    views: parseInt(channel.statistics.viewCount),
+                    title: channel.snippet.title,
+                    thumbnail: channel.snippet.thumbnails.medium.url
+                };
+            } catch (error) {
+                console.error(`Error fetching stats for @${handle}:`, error);
+                return null;
+            }
+        }
+
+        // Format numbers for display
+        function formatNumber(num) {
+            if (!num && num !== 0) return 'N/A';
+            
+            if (num >= 1000000) {
+                return (num / 1000000).toFixed(1) + 'M';
+            } else if (num >= 1000) {
+                return (num / 1000).toFixed(1) + 'K';
+            }
+            return num.toString();
+        }
+
+        // Update API status display
+        function updateAPIStatus(status, message) {
+            const statusElement = document.getElementById('api-status');
+            statusElement.className = `api-status ${status}`;
+            
+            switch(status) {
+                case 'loading':
+                    statusElement.innerHTML = `<i class="fas fa-sync-alt fa-spin"></i> ${message}`;
+                    break;
+                case 'success':
+                    statusElement.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+                    break;
+                case 'error':
+                    statusElement.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
+                    break;
+            }
+        }
+
+        // Update all creator stats
+        async function updateAllCreatorStats() {
+            updateAPIStatus('loading', 'FETCHING CREATOR STATS...');
+            
+            const creatorCards = document.querySelectorAll('.creator-card');
+            let completed = 0;
+            let total = creatorCards.length;
+            
+            for (const card of creatorCards) {
+                const handle = card.dataset.youtubeHandle;
+                if (!handle) continue;
+                
+                try {
+                    const stats = await getYouTubeChannelStats(handle);
+                    
+                    if (stats) {
+                        // Update subscriber count
+                        const subElement = card.querySelector('[data-stat="subscribers"]');
+                        if (subElement) {
+                            subElement.innerHTML = formatNumber(stats.subscribers);
+                            subElement.title = `${stats.subscribers.toLocaleString()} subscribers`;
+                        }
+                        
+                        // Update video count
+                        const videoElement = card.querySelector('[data-stat="videos"]');
+                        if (videoElement) {
+                            videoElement.innerHTML = formatNumber(stats.videos);
+                            videoElement.title = `${stats.videos.toLocaleString()} videos`;
+                        }
+                        
+                        // Update creator name if different
+                        const nameElement = card.querySelector('.creator-info h3');
+                        if (nameElement && stats.title) {
+                            const currentName = nameElement.textContent.trim();
+                            if (stats.title !== currentName && !stats.title.includes(currentName)) {
+                                nameElement.textContent = stats.title;
+                            }
+                        }
+                        
+                        completed++;
+                        
+                        // Update status
+                        if (completed === total) {
+                            updateAPIStatus('success', `REAL-TIME STATS LOADED (${completed}/${total})`);
+                            
+                            // Hide status after 5 seconds
+                            setTimeout(() => {
+                                const statusElement = document.getElementById('api-status');
+                                statusElement.style.opacity = '0';
+                                statusElement.style.transition = 'opacity 1s';
+                                setTimeout(() => {
+                                    statusElement.style.display = 'none';
+                                }, 1000);
+                            }, 5000);
+                        } else {
+                            updateAPIStatus('loading', `LOADING... (${completed}/${total} CREATORS)`);
+                        }
+                    }
+                } catch (error) {
+                    console.error(`Failed to update ${handle}:`, error);
+                    completed++;
+                }
+                
+                // Small delay to avoid rate limits
+                await new Promise(resolve => setTimeout(resolve, 300));
+            }
+            
+            // If all failed
+            if (completed === total) {
+                updateAPIStatus('error', 'USING CACHED STATS - CHECK API KEY');
+            }
+        }
+
+        // Cache stats in localStorage
+        function cacheStats(handle, stats) {
+            const cacheKey = `youtube_stats_${handle}`;
+            const cacheData = {
+                stats: stats,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+        }
+
+        // Get cached stats
+        function getCachedStats(handle) {
+            const cacheKey = `youtube_stats_${handle}`;
+            const cached = localStorage.getItem(cacheKey);
+            
+            if (cached) {
+                const data = JSON.parse(cached);
+                // Use cache if less than 1 hour old
+                if (Date.now() - data.timestamp < 60 * 60 * 1000) {
+                    return data.stats;
+                }
+            }
+            return null;
+        }
+
+        // ===========================================
         // BOOT SEQUENCE
         // ===========================================
         const bootLines = [
@@ -1734,14 +1962,14 @@
             {text: "> GRAPHICS PROCESSOR: ONLINE", delay: 1500, class: "success"},
             {text: "> AUDIO SUBSYSTEM: ONLINE", delay: 1800, class: "success"},
             {text: "> NETWORK INTERFACE: ESTABLISHED", delay: 2100, class: "success"},
-            {text: "ACCESSING DATABASE...", delay: 2500, class: "system"},
-            {text: "LOADING CREATOR NETWORK...", delay: 3200, class: "system"},
-            {text: "> CONNECTING TO NEURAL GRID...", delay: 3800, class: ""},
-            {text: "> SYNAPSE SYNCHRONIZATION: 100%", delay: 4400, class: ""},
-            {text: "ESTABLISHING NEURAL LINK...", delay: 5000, class: "neural"},
-            {text: "> BIO-METRICS: STABLE", delay: 5600, class: "success"},
-            {text: "NEON INTERFACE ACTIVE", delay: 6200, class: "neural"},
-            {text: "SYSTEM READY", delay: 6800, class: "neural"}
+            {text: "CONNECTING TO YOUTUBE API...", delay: 2500, class: "system"},
+            {text: "> API KEY VERIFIED", delay: 2900, class: "success"},
+            {text: "FETCHING CREATOR STATISTICS...", delay: 3300, class: "system"},
+            {text: "> LOADING REAL-TIME DATA", delay: 3800, class: ""},
+            {text: "ESTABLISHING NEURAL LINK...", delay: 4400, class: "neural"},
+            {text: "> BIO-METRICS: STABLE", delay: 5000, class: "success"},
+            {text: "NEON INTERFACE ACTIVE", delay: 5600, class: "neural"},
+            {text: "SYSTEM READY", delay: 6200, class: "neural"}
         ];
 
         let currentLine = 0;
@@ -1772,8 +2000,13 @@
                 setTimeout(() => {
                     document.getElementById('boot-screen').style.display = 'none';
                     document.body.classList.remove('boot-active');
+                    
+                    // Start fetching YouTube stats after boot
+                    setTimeout(() => {
+                        updateAllCreatorStats();
+                    }, 1000);
                 }, 1000);
-            }, 7500);
+            }, 6800);
         }
 
         document.addEventListener('DOMContentLoaded', () => {
@@ -1793,6 +2026,9 @@
             setTimeout(() => {
                 document.getElementById('boot-screen').style.display = 'none';
                 document.body.classList.remove('boot-active');
+                
+                // Start fetching YouTube stats immediately
+                updateAllCreatorStats();
             }, 500);
         }
 
@@ -1826,6 +2062,19 @@
                 }
             });
         });
+
+        // Refresh stats button (optional - can be added to UI)
+        function refreshStats() {
+            updateAPIStatus('loading', 'REFRESHING STATS...');
+            updateAllCreatorStats();
+        }
+
+        // Auto-refresh every 10 minutes
+        setInterval(() => {
+            if (document.getElementById('creators-page').classList.contains('active')) {
+                refreshStats();
+            }
+        }, 10 * 60 * 1000);
     </script>
 </body>
 </html>
